@@ -1,0 +1,13 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+
+/*.html
+  Content-Type: text/html; charset=utf-8
+
+/*.js
+  Content-Type: text/javascript; charset=utf-8
+
+/course-content/*
+  Content-Type: text/html; charset=utf-8
