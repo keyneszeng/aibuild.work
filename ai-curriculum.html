@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 技能升级课程体系 · 交互规划台 / AI Skills Curriculum · Interactive Planner</title>
+<style>
+  :root{
+    --bg:#0f1117; --bg2:#171a23; --card:#1c202b; --card2:#222736;
+    --txt:#e8ebf2; --sub:#9aa3b5; --line:#2b3142; --accent:#5b8cff;
+    --good:#3ecf8e; --warn:#ffb454; --bad:#ff6b6b; --chip:#2a3142;
+    --shadow:0 6px 24px rgba(0,0,0,.35);
+  }
+  @media (prefers-color-scheme: light){
+    :root{
+      --bg:#f4f6fb; --bg2:#ffffff; --card:#ffffff; --card2:#f0f3fa;
+      --txt:#1a2030; --sub:#5a6377; --line:#e3e8f2; --accent:#3b6fe0;
+      --good:#15935f; --warn:#c4791a; --bad:#d23b3b; --chip:#eef2fb;
+      --shadow:0 6px 20px rgba(20,40,90,.08);
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--txt);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 18px}
+  /* Header */
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;max-width:1080px;margin:0 auto;flex-wrap:wrap;gap:10px}
+  .brand{font-weight:800;font-size:17px;letter-spacing:.3px;display:flex;align-items:center;gap:9px}
+  .brand .dot{width:11px;height:11px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--good));box-shadow:0 0 12px var(--accent)}
+  nav{display:flex;gap:4px;flex-wrap:wrap}
+  nav button{background:transparent;border:1px solid transparent;color:var(--sub);padding:7px 13px;border-radius:9px;cursor:pointer;font-size:14px;font-weight:600;transition:.15s}
+  nav button:hover{color:var(--txt);background:var(--card)}
+  nav button.active{color:var(--txt);background:var(--card);border-color:var(--line)}
+  .langswitch{display:flex;gap:4px;margin-left:8px}
+  .langswitch button{background:var(--card);border:1px solid var(--line);color:var(--sub);padding:6px 11px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700}
+  .langswitch button.active{color:#fff;background:var(--accent);border-color:var(--accent)}
+  /* Hero */
+  .hero{padding:44px 0 26px;text-align:center}
+  .hero h1{font-size:30px;font-weight:850;letter-spacing:.4px;margin-bottom:12px}
+  .hero p{color:var(--sub);max-width:680px;margin:0 auto;font-size:15.5px}
+  .hero .tags{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .hero .tags span{background:var(--chip);border:1px solid var(--line);color:var(--sub);font-size:12.5px;padding:5px 11px;border-radius:20px}
+  /* Sections */
+  section{padding:30px 0;display:none;animation:fade .25s ease}
+  section.show{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  h2.sec{font-size:22px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+  h2.sec .bar{width:5px;height:22px;border-radius:3px;background:linear-gradient(var(--accent),var(--good))}
+  .secdesc{color:var(--sub);margin-bottom:22px;font-size:14.5px}
+  /* Persona cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;cursor:pointer;transition:.18s;position:relative;overflow:hidden}
+  .pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--accent)}
+  .pcard .ribbon{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+  .ribbon.p0{background:rgba(62,207,142,.16);color:var(--good);border:1px solid rgba(62,207,142,.4)}
+  .ribbon.p1{background:rgba(91,140,255,.16);color:var(--accent);border:1px solid rgba(91,140,255,.4)}
+  .pcard .ic{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:12px}
+  .pcard h3{font-size:16.5px;margin-bottom:3px}
+  .pcard .aud{color:var(--sub);font-size:13px;margin-bottom:10px}
+  .pcard .goal{font-size:13.5px;color:var(--txt);opacity:.9}
+  .pcard .out{margin-top:11px;font-size:12.5px;color:var(--sub);border-top:1px dashed var(--line);padding-top:10px}
+  /* Detail panel */
+  .detail{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;display:none}
+  .detail.show{display:block;animation:fade .25s ease}
+  .detail .dhead{display:flex;align-items:center;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .detail .dhead .ic{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px}
+  .detail .dhead h3{font-size:21px}
+  .detail .dhead .aud{color:var(--sub);font-size:14px}
+  .kv{display:grid;grid-template-columns:120px 1fr;gap:10px 14px;margin-bottom:18px;font-size:14px}
+  .kv .k{color:var(--sub);font-weight:600}
+  .kv .v{color:var(--txt)}
+  .moduletable{width:100%;border-collapse:collapse;margin:10px 0 18px;font-size:13.5px}
+  .moduletable th,.moduletable td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+  .moduletable th{background:var(--card2);color:var(--sub);font-weight:700}
+  .moduletable td:first-child{font-weight:700;color:var(--accent);white-space:nowrap}
+  .chips{display:flex;gap:7px;flex-wrap:wrap;margin:6px 0}
+  .chip{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12.5px;color:var(--txt)}
+  .vlist{list-style:none;display:flex;flex-direction:column;gap:8px}
+  .vlist li{font-size:13.5px;padding:10px 13px;border-radius:10px;background:var(--card2);border-left:3px solid var(--good)}
+  .vlist.bad li{border-left-color:var(--bad)}
+  .vlist.warn li{border-left-color:var(--warn)}
+  /* Radar / capability */
+  .capwrap{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media(max-width:760px){.capwrap{grid-template-columns:1fr}}
+  .captable{width:100%;border-collapse:collapse;font-size:14px}
+  .captable th,.captable td{border:1px solid var(--line);padding:10px;vertical-align:top}
+  .captable th{background:var(--card2);color:var(--sub);font-weight:700;text-align:left}
+  .barline{display:flex;align-items:center;gap:8px;margin:5px 0}
+  .barline .nm{width:74px;font-size:12px;color:var(--sub);flex-shrink:0}
+  .barline .track{flex:1;height:10px;background:var(--card2);border-radius:6px;overflow:hidden}
+  .barline .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--good))}
+  .barline .val{width:18px;font-size:11px;color:var(--sub);text-align:right}
+  /* Roadmap */
+  .roadmap{display:flex;flex-direction:column;gap:16px}
+  .phase{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;position:relative;overflow:hidden}
+  .phase::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(var(--accent),var(--good))}
+  .phase h3{font-size:17px;margin-bottom:4px}
+  .phase .ptag{font-size:12px;color:var(--sub);margin-bottom:12px}
+  .phase ul{margin:0;padding-left:18px;font-size:14px}
+  .phase ul li{margin:5px 0}
+  /* Quiz */
+  .quiz{max-width:640px;margin:0 auto}
+  .qcard{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;margin-bottom:18px}
+  .qcard .qn{font-weight:700;font-size:15px;margin-bottom:14px;display:flex;gap:8px}
+  .qcard .qn .n{background:var(--accent);color:#fff;width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+  .opts{display:flex;flex-direction:column;gap:9px}
+  .opt{border:1px solid var(--line);background:var(--card2);border-radius:11px;padding:12px 14px;cursor:pointer;font-size:14px;transition:.15s;display:flex;align-items:center;gap:10px}
+  .opt:hover{border-color:var(--accent)}
+  .opt.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--card2))}
+  .opt .box{width:18px;height:18px;border-radius:6px;border:2px solid var(--sub);flex-shrink:0}
+  .opt.sel .box{background:var(--accent);border-color:var(--accent);position:relative}
+  .opt.sel .box::after{content:"✓";position:absolute;color:#fff;font-size:12px;font-weight:800;top:50%;left:50%;transform:translate(-50%,-50%)}
+  .qbtn{display:block;width:100%;margin:8px auto 0;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--accent),var(--good));color:#fff;font-size:15px;font-weight:800;cursor:pointer;transition:.15s}
+  .qbtn:hover{filter:brightness(1.08)}
+  .qbtn:disabled{opacity:.45;cursor:not-allowed}
+  .result{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;margin-top:20px;display:none}
+  .result.show{display:block;animation:fade .25s ease}
+  .result .match{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+  .result .match .ic{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:30px}
+  .result h3{font-size:20px}
+  .result .sub{color:var(--sub);font-size:14px}
+  .result .line{margin:12px 0;font-size:14.5px}
+  .result .line b{color:var(--accent)}
+  /* Resources */
+  .resgroup{margin-bottom:18px}
+  .resgroup h3{font-size:16px;margin-bottom:10px;color:var(--txt)}
+  .reslist{display:flex;flex-direction:column;gap:8px}
+  .resitem{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:12px 14px;font-size:13.5px}
+  .resitem .repo{font-weight:700;color:var(--accent);font-family:ui-monospace,Menlo,monospace;font-size:13px}
+  .resitem .aud{color:var(--sub);font-size:12px;margin-left:8px}
+  .resitem .note{color:var(--sub);margin-top:4px;font-size:12.5px}
+  /* Risk */
+  .risk{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+  .risk ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .risk li{padding:12px 14px;border-radius:11px;background:var(--card2);font-size:14px;display:flex;gap:11px;align-items:flex-start}
+  .risk li .ic{color:var(--bad);font-size:17px;flex-shrink:0;line-height:1.4}
+  /* Footer */
+  footer{border-top:1px solid var(--line);padding:26px 0 40px;color:var(--sub);font-size:13px;text-align:center}
+  .pill{display:inline-block;background:var(--chip);border:1px solid var(--line);border-radius:20px;padding:4px 12px;margin:3px;font-size:12.5px}
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="brand"><span class="dot"></span><span id="brandText">AI 技能升级课程体系</span></div>
+    <nav id="nav">
+      <button data-sec="overview" class="active">概览</button>
+      <button data-sec="courses">选课程</button>
+      <button data-sec="capability">能力模型</button>
+      <button data-sec="roadmap">路线图</button>
+      <button data-sec="quiz">匹配测试</button>
+      <button data-sec="resources">资源库</button>
+      <button data-sec="risk">风险边界</button>
+    </nav>
+    <div class="langswitch">
+      <button data-lang="zh" class="active">中文</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- OVERVIEW -->
+  <section id="overview" class="show">
+    <div class="hero">
+      <h1 id="heroTitle">分层 · 场景化 · 成果交付的 AI 学习矩阵</h1>
+      <p id="heroDesc">为儿童、中学生、大学生、普通社会人员、产品经理，分别设计目标、场景、成果各异的 AI 技能升级课程——不是同一门课的不同难度，而是五种能力系统。</p>
+      <div class="tags" id="heroTags">
+        <span>5 条人群主线</span><span>8 ~ 10 节/线</span><span>P0 优先职场人 + PM</span>
+        <span>场景化任务</span><span>可展示成果</span><span>可交付课程包</span>
+      </div>
+    </div>
+    <div style="padding:10px 0 30px">
+      <h2 class="sec"><span class="bar"></span><span id="ovTitle">五条主线一览</span></h2>
+      <p class="secdesc" id="ovDesc">点击下方卡片可在「选课程」中展开完整详情（目标 / 8–10 节模块 / 交付物 / 验收红线 / 能力雷达）。</p>
+      <div class="grid" id="overviewGrid"></div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section id="courses">
+    <h2 class="sec"><span class="bar"></span><span id="coTitle">选课程 · 身份选择器</span></h2>
+    <p class="secdesc" id="coDesc">选择与你最匹配的身份，查看该课程线的完整设计。再点一次卡片可收起。</p>
+    <div class="grid" id="courseGrid"></div>
+    <div class="detail" id="detail"></div>
+  </section>
+
+  <!-- CAPABILITY -->
+  <section id="capability">
+    <h2 class="sec"><span class="bar"></span><span id="capTitle">核心能力模型</span></h2>
+    <p class="secdesc" id="capDesc">五层能力，每条主线权重不同。条形图展示各主线在每层能力的侧重。</p>
+    <div class="capwrap">
+      <div>
+        <table class="captable">
+          <thead><tr><th id="capTh1">能力层级</th><th id="capTh2">含义</th><th id="capTh3">重点人群</th></tr></thead>
+          <tbody id="capTbody"></tbody>
+        </table>
+      </div>
+      <div id="capBars"></div>
+    </div>
+  </section>
+
+  <!-- ROADMAP -->
+  <section id="roadmap">
+    <h2 class="sec"><span class="bar"></span><span id="rmTitle">生产路线图</span></h2>
+    <p class="secdesc" id="rmDesc">三阶段：先 MVP 验证付费意愿，再扩展学生/儿童，最后平台化。</p>
+    <div class="roadmap" id="roadmapInner"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz">
+    <h2 class="sec"><span class="bar"></span><span id="qzTitle">课程匹配测试</span></h2>
+    <p class="secdesc" id="qzDesc">4 个问题，30 秒找到最适合你的课程线，并给出起步建议。</p>
+    <div class="quiz" id="quizBox"></div>
+    <button class="qbtn" id="quizBtn" disabled>查看匹配结果</button>
+    <div class="result" id="quizResult"></div>
+  </section>
+
+  <!-- RESOURCES -->
+  <section id="resources">
+    <h2 class="sec"><span class="bar"></span><span id="rsTitle">开源参考资源</span></h2>
+    <p class="secdesc" id="rsDesc">来自 GitHub 的公开知识，仅作能力框架与方法论参考，须重组为中文本地化课程产品，不可照搬。</p>
+    <div id="resBox"></div>
+  </section>
+
+  <!-- RISK -->
+  <section id="risk">
+    <h2 class="sec"><span class="bar"></span><span id="rkTitle">风险边界（全局红线）</span></h2>
+    <p class="secdesc" id="rkDesc">所有课程必含的安全与伦理边界，贯穿每一节。</p>
+    <div class="risk">
+      <ul id="riskList"></ul>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div id="ftText">AI 技能升级课程体系 · 交互规划台 v0.2 · 中英双语</div>
+  <div style="margin-top:8px">
+    <span class="pill">单文件 · 零依赖</span>
+    <span class="pill">可离线打开</span>
+    <span class="pill">数据驱动渲染</span>
+    <span class="pill">中英双语</span>
+  </div>
+</footer>
+
+<script>
+/* ============ DATA (bilingual) ============ */
+const T = {
+  zh:{
+    brand:"AI 技能升级课程体系",
+    nav:["概览","选课程","能力模型","路线图","匹配测试","资源库","风险边界"],
+    heroTitle:"分层 · 场景化 · 成果交付的 AI 学习矩阵",
+    heroDesc:"为儿童、中学生、大学生、普通社会人员、产品经理，分别设计目标、场景、成果各异的 AI 技能升级课程——不是同一门课的不同难度，而是五种能力系统。",
+    heroTags:["5 条人群主线","8 ~ 10 节/线","P0 优先职场人 + PM","场景化任务","可展示成果","可交付课程包"],
+    ovTitle:"五条主线一览", ovDesc:"点击下方卡片可在「选课程」中展开完整详情（目标 / 8–10 节模块 / 交付物 / 验收红线 / 能力雷达）。",
+    coTitle:"选课程 · 身份选择器", coDesc:"选择与你最匹配的身份，查看该课程线的完整设计。再点一次卡片可收起。",
+    capTitle:"核心能力模型", capDesc:"五层能力，每条主线权重不同。条形图展示各主线在每层能力的侧重。",
+    capTh:["能力层级","含义","重点人群"],
+    rmTitle:"生产路线图", rmDesc:"三阶段：先 MVP 验证付费意愿，再扩展学生/儿童，最后平台化。",
+    qzTitle:"课程匹配测试", qzDesc:"4 个问题，30 秒找到最适合你的课程线，并给出起步建议。",
+    rsTitle:"开源参考资源", rsDesc:"来自 GitHub 的公开知识，仅作能力框架与方法论参考，须重组为中文本地化课程产品，不可照搬。",
+    rkTitle:"风险边界（全局红线）", rkDesc:"所有课程必含的安全与伦理边界，贯穿每一节。",
+    quizBtn:"查看匹配结果",
+    ft:"AI 技能升级课程体系 · 交互规划台 v0.2 · 中英双语",
+    openDir:"📂 打开课件目录",
+    modules:"课程模块", taskOut:"任务产出",
+    coreGoal:"核心目标", focus:"学习重点", outcome:"最终成果",
+    weights:"能力权重", deliver:"生产交付物",
+    mustGood:"验收红线（须满足）", mustBad:"禁止项（不可越界）",
+    p0:"P0", p1:"P1"
+  },
+  en:{
+    brand:"AI Skills Upgrade Curriculum",
+    nav:["Overview","Courses","Capabilities","Roadmap","Quiz","Resources","Risk"],
+    heroTitle:"A Layered · Scenario-based · Outcome-driven AI Learning Matrix",
+    heroDesc:"Separate AI skills tracks for children, secondary students, university students, working professionals, and product managers — each with different goals, scenarios, and deliverables. Not one course at different difficulty levels, but five distinct capability systems.",
+    heroTags:["5 audience tracks","8–10 lessons/track","P0: Professionals + PM","Scenario tasks","Showcase outputs","Deliverable course kits"],
+    ovTitle:"Five Tracks at a Glance", ovDesc:"Click a card to expand full details (goals / 8–10 modules / deliverables / acceptance red lines / capability radar) under \"Courses\".",
+    coTitle:"Choose a Course · Identity Selector", coDesc:"Pick the identity that fits you best to see the full track design. Click the card again to collapse.",
+    capTitle:"Core Capability Model", capDesc:"Five capability layers, weighted differently per track. Bar charts show each track's emphasis across the layers.",
+    capTh:["Capability Layer","Meaning","Key Audiences"],
+    rmTitle:"Production Roadmap", rmDesc:"Three phases: validate willingness-to-pay with an MVP first, then expand to students/children, then platformize.",
+    qzTitle:"Course Matching Quiz", qzDesc:"4 questions, 30 seconds to find the best track for you, with a starting suggestion.",
+    rsTitle:"Open-source References", rsDesc:"Public knowledge from GitHub, used only as a capability framework and methodology reference. Must be reorganized into localized course products — not copied verbatim.",
+    rkTitle:"Risk Boundaries (Global Red Lines)", rkDesc:"Safety and ethics boundaries included in every course, threaded through each lesson.",
+    quizBtn:"View Matching Result",
+    ft:"AI Skills Upgrade Curriculum · Interactive Planner v0.2 · Bilingual",
+    openDir:"📂 Open Course Folder",
+    modules:"Modules", taskOut:"Task / Output",
+    coreGoal:"Core Goal", focus:"Focus Areas", outcome:"Final Outcome",
+    weights:"Capability Weights", deliver:"Production Deliverables",
+    mustGood:"Acceptance Red Lines (must meet)", mustBad:"Prohibited (out of bounds)",
+    p0:"P0", p1:"P1"
+  }
+};
+
+const DATA = {
+  personas:[
+    {
+      id:"kids", name:"AI 创造力启蒙营", name_en:"AI Creativity Camp", audience:"儿童 6–12 岁 + 家长", audience_en:"Children 6–12 + Parents",
+      icon:"🎨", color:"#ff8fab", priority:"P1",
+      goal:"激发创造力与安全意识：让孩子知道 AI 是工具不是权威，训练清楚提问，用 AI 把想法变故事/图/角色，建立隐私、真假、依赖风险意识。",
+      goal_en:"Spark creativity and safety awareness: let children know AI is a tool, not an authority; train clear questioning; use AI to turn ideas into stories/images/characters; build awareness of privacy, truth, and dependency risks.",
+      focus:["故事创作","图像与角色","提问表达","真假判断","亲子任务"],
+      focus_en:["Storytelling","Images & Characters","Asking Questions","Truth vs Fake","Parent-child Tasks"],
+      outcome:"AI 绘本 / 故事集 / 创意作品集", outcome_en:"AI picture book / story collection / creative portfolio",
+      modules:[
+        {no:1,title:"AI 是什么",title_en:"What is AI",task:"画出「我心中的 AI 助手」",task_en:"Draw \"My AI Helper\""},
+        {no:2,title:"如何向 AI 提问题",title_en:"How to Ask AI",task:"三种提问方式对比卡",task_en:"3 questioning styles comparison card"},
+        {no:3,title:"和 AI 一起讲故事",title_en:"Storytelling with AI",task:"一篇原创童话",task_en:"An original fairy tale"},
+        {no:4,title:"和 AI 一起画角色",title_en:"Character Design with AI",task:"角色设定表 + 图片提示词",task_en:"Character sheet + image prompts"},
+        {no:5,title:"AI 帮我认识世界",title_en:"AI Helps Me Learn",task:"一个科学小问题解释卡",task_en:"A science question explainer card"},
+        {no:6,title:"AI 也会说错",title_en:"AI Can Be Wrong",task:"真假信息判断小游戏",task_en:"True/false info game"},
+        {no:7,title:"我的未来发明",title_en:"My Future Invention",task:"一个未来物品设计稿",task_en:"A future object design"},
+        {no:8,title:"AI 创作展示",title_en:"AI Creation Showcase",task:"AI 绘本或创意作品集",task_en:"AI picture book or portfolio"}
+      ],
+      deliverables:["8 节完整教案（30–45 分钟/节）","儿童友好语言 + 家长提示","每节≥1 动手任务","安全提醒手册","作品集模板"],
+      deliverables_en:["8 full lesson plans (30–45 min each)","Child-friendly language + parent tips","≥1 hands-on task per lesson","Safety reminder handbook","Portfolio template"],
+      validationGood:["8 岁儿童能听懂大部分内容","家长可在家陪同完成","产出偏创作、不偏考试"],
+      validationGood_en:["An 8-year-old understands most of it","Parents can accompany at home","Output leans creative, not exam-focused"],
+      validationBad:["不鼓励孩子把 AI 当权威答案来源"],
+      validationBad_en:["Do not encourage children to treat AI as an authority"],
+      weights:{素养:5,使用:2,协作:1,工作流:0,产品:0}, weights_en:{Literacy:5,Use:2,Collaborate:1,Workflow:0,Product:0},
+      dir:"儿童创造力启蒙营", dir_en:"儿童创造力启蒙营"
+    },
+    {
+      id:"teen", name:"AI 学习力训练营", name_en:"AI Study Skills Camp", audience:"初中生 / 高中生", audience_en:"Secondary School Students",
+      icon:"📚", color:"#7c5cff", priority:"P1",
+      goal:"提升学习效率与认知：用 AI 辅助学习而非代写，拆解难题，练英语/写作/演讲/复盘，建立引用来源、核查事实、避抄袭意识。",
+      goal_en:"Boost learning efficiency and cognition: use AI to assist learning, not to write for you; break down hard problems; practice English/writing/speaking/reflection; build awareness of citing sources, verifying facts, and avoiding plagiarism.",
+      focus:["学习计划","难题拆解","写作表达","信息辨别","学术诚信"],
+      focus_en:["Study Planning","Problem Decomposition","Writing & Expression","Info Literacy","Academic Integrity"],
+      outcome:"个人 AI 学习助手方案", outcome_en:"Personal AI Study Assistant Plan",
+      modules:[
+        {no:1,title:"AI 学习助手入门",title_en:"AI Study Assistant Intro",task:"我的 AI 学习规则",task_en:"My AI study rules"},
+        {no:2,title:"如何问出好问题",title_en:"Asking Good Questions",task:"一份学科提问模板",task_en:"A subject question template"},
+        {no:3,title:"难题拆解",title_en:"Hard Problem Breakdown",task:"一道错题的分步讲解卡",task_en:"Step-by-step card for a wrong answer"},
+        {no:4,title:"英语和写作训练",title_en:"English & Writing",task:"一套写作修改记录",task_en:"A set of writing revision notes"},
+        {no:5,title:"知识点复习",title_en:"Knowledge Review",task:"一份 AI 生成复习计划",task_en:"An AI-generated review plan"},
+        {no:6,title:"信息真假判断",title_en:"Truth vs Fake",task:"一个事实核查练习",task_en:"A fact-checking exercise"},
+        {no:7,title:"演讲和表达",title_en:"Speaking & Presentation",task:"一份演讲稿 + 反馈记录",task_en:"A speech + feedback notes"},
+        {no:8,title:"个人学习助手设计",title_en:"Personal Study Assistant Design",task:"AI 学习助手使用手册",task_en:"AI study assistant manual"}
+      ],
+      deliverables:["8 节教案","每节含学校/机构/家庭自学三版","正确 vs 错误使用对比案例","信息核查 + 学术诚信模块"],
+      deliverables_en:["8 lesson plans","School / institution / self-study versions per lesson","Correct vs wrong usage comparison cases","Fact-checking + academic integrity module"],
+      validationGood:["每案例要求学生解释自己的理解","必含信息核查与学术诚信"],
+      validationGood_en:["Each case requires students to explain their own understanding","Must include fact-checking and academic integrity"],
+      validationBad:["不鼓励学生直接复制答案"],
+      validationBad_en:["Do not encourage students to copy answers directly"],
+      weights:{素养:5,使用:4,协作:2,工作流:0,产品:0}, weights_en:{Literacy:5,Use:4,Collaborate:2,Workflow:0,Product:0},
+      dir:"中学生学习力训练营", dir_en:"中学生学习力训练营"
+    },
+    {
+      id:"uni", name:"AI 项目与职业能力营", name_en:"AI Projects & Career Camp", audience:"大学生 / 研究生 / 应届", audience_en:"University / Grad / New Grads",
+      icon:"🎓", color:"#3ecf8e", priority:"P1",
+      goal:"建立作品集与职业竞争力：用 AI 提升学习/研究/实习/求职/项目力，建 AI 原生作品集，从问题出发完成调研→设计→执行→展示。",
+      goal_en:"Build portfolio and career competitiveness: use AI to boost study/research/internship/job-search/project skills; build an AI-native portfolio; go from problem → research → design → execution → showcase.",
+      focus:["调研","论文辅助","数据分析","简历面试","项目实践"],
+      focus_en:["Research","Paper Assist","Data Analysis","Resume & Interview","Project Practice"],
+      outcome:"AI 项目作品集", outcome_en:"AI Project Portfolio",
+      modules:[
+        {no:1,title:"AI 学习与职业定位",title_en:"AI Learning & Career",task:"个人 AI 能力地图",task_en:"Personal AI capability map"},
+        {no:2,title:"AI 资料调研",title_en:"AI Research",task:"一个行业调研报告",task_en:"An industry research report"},
+        {no:3,title:"AI 论文和资料阅读",title_en:"AI Paper Reading",task:"一篇论文阅读笔记",task_en:"A paper reading note"},
+        {no:4,title:"AI 数据分析入门",title_en:"AI Data Analysis",task:"一个数据洞察小报告",task_en:"A data insight mini-report"},
+        {no:5,title:"AI 辅助简历和面试",title_en:"AI Resume & Interview",task:"简历优化 + 模拟面试记录",task_en:"Resume optimization + mock interview notes"},
+        {no:6,title:"AI 项目设计",title_en:"AI Project Design",task:"一个项目计划书",task_en:"A project proposal"},
+        {no:7,title:"AI 应用原型",title_en:"AI App Prototype",task:"一个无代码 / 低代码 Demo",task_en:"A no-code / low-code demo"},
+        {no:8,title:"作品集包装",title_en:"Portfolio Packaging",task:"一份项目展示页 / 作品集",task_en:"A project showcase page / portfolio"}
+      ],
+      deliverables:["8–10 节课程","每节含工具清单/任务/示例 Prompt/评分","≥3 毕业项目（简历助手/资料整理/行业调研）","作品集模板"],
+      deliverables_en:["8–10 lessons","Tool list / task / sample Prompt / grading per lesson","≥3 capstone projects (resume helper / research / industry survey)","Portfolio template"],
+      validationGood:["完成至少 1 个可展示作品","作品可进简历/面试/主页"],
+      validationGood_en:["Complete at least 1 showcaseable work","Work can go on resume / interview / homepage"],
+      validationBad:["内容不能只停留在 Prompt，须完整项目过程"],
+      validationBad_en:["Content must not stop at Prompts; must include the full project process"],
+      weights:{素养:4,使用:4,协作:4,工作流:3,产品:2}, weights_en:{Literacy:4,Use:4,Collaborate:4,Workflow:3,Product:2},
+      dir:"大学生项目职业能力营", dir_en:"大学生项目职业能力营"
+    },
+    {
+      id:"work", name:"AI 工作提效实战营", name_en:"AI Workplace Productivity Camp", audience:"行政 / 销售 / 客服 / 运营 / 个体户等", audience_en:"Admin / Sales / CS / Ops / Solo Biz",
+      icon:"💼", color:"#5b8cff", priority:"P0",
+      goal:"解决真实工作问题：立刻把 AI 用进每天工作，减少重复劳动，提高写作/整理/沟通/分析/决策效率，建立自己的岗位 AI 工作流。",
+      goal_en:"Solve real work problems: put AI to work in daily tasks immediately, cut repetitive labor, boost writing/organizing/communication/analysis/decision efficiency, and build your own role-based AI workflow.",
+      focus:["办公写作","会议沟通","销售客服","销顾","管理招聘"],
+      focus_en:["Office Writing","Meetings & Comms","Sales & CS","Content Ops","Mgmt & Hiring"],
+      outcome:"个人 AI 工作流工具包", outcome_en:"Personal AI Workflow Toolkit",
+      modules:[
+        {no:1,title:"AI 工具入门",title_en:"AI Tools Primer",task:"我的 10 个高频工作场景",task_en:"My 10 high-frequency scenarios"},
+        {no:2,title:"写作和文档",title_en:"Writing & Docs",task:"通知 / 周报 / 方案模板",task_en:"Notice / Weekly / Proposal templates"},
+        {no:3,title:"会议和沟通",title_en:"Meetings & Comms",task:"会议纪要 + 跟进清单",task_en:"Minutes + follow-up list"},
+        {no:4,title:"销售和客服",title_en:"Sales & Service",task:"话术 / 异议处理 / 客户跟进",task_en:"Scripts / objections / follow-up"},
+        {no:5,title:"内容运营",title_en:"Content Ops",task:"选题 / 文案 / 短视频脚本",task_en:"Topics / copy / short-video script"},
+        {no:6,title:"表格和数据",title_en:"Sheets & Data",task:"数据总结 + 经营分析",task_en:"Data summary + business analysis"},
+        {no:7,title:"管理和招聘",title_en:"Mgmt & Hiring",task:"招聘 JD / 面试题 / 团队复盘",task_en:"JD / interview / team retro"},
+        {no:8,title:"私人工作流",title_en:"Personal Workflow",task:"个人 AI 工作助手说明书",task_en:"Personal AI assistant spec"}
+      ],
+      deliverables:["8 节教案 + PPT 文案","50 个工作场景 Prompt","6 个岗位工具包","1 个个人 AI 工作流模板","1 节免费公开课","1 个落地页文案"],
+      deliverables_en:["8 lesson plans + PPT copy","50 work-scenario Prompts","6 role-based toolkits","1 personal AI workflow template","1 free public class","1 landing-page copy"],
+      validationGood:["非技术人能照做（不用 API/代码/模型参数）","强调「人判断、AI 辅助」"],
+      validationGood_en:["Non-technical people can follow (no API/code/model params)","Emphasizes \"human judges, AI assists\""],
+      validationBad:["必含隐私 + 商业信息保护提醒"],
+      validationBad_en:["Must include privacy + business-info protection reminders"],
+      weights:{素养:4,使用:5,协作:4,工作流:5,产品:1}, weights_en:{Literacy:4,Use:5,Collaborate:4,Workflow:5,Product:1},
+      dir:"职场人工作提效实战营", dir_en:"职场人工作提效实战营"
+    },
+    {
+      id:"pm", name:"AI 产品经理进阶营", name_en:"AI PM Advanced Camp", audience:"产品经理 / 创业者", audience_en:"Product Managers / Founders",
+      icon:"🚀", color:"#ffb454", priority:"P0",
+      goal:"设计 AI 原生产品与 Agent：从「会用 AI」升级为「会设计 AI 产品」，理解 AI 产品与传统软件差异，能设计 AI 功能/RAG/Agent/评估，与技术团队协作。",
+      goal_en:"Design AI-native products and Agents: level up from \"can use AI\" to \"can design AI products\"; understand how AI products differ from traditional software; design AI features / RAG / Agents / evaluation; collaborate with engineering.",
+      focus:["AI 产品逻辑","PRD","Agent 工作流","RAG","评估与商业"],
+      focus_en:["AI Product Logic","PRD","Agent Workflow","RAG","Eval & Biz"],
+      outcome:"AI 产品方案与原型", outcome_en:"AI Product Plan & Prototype",
+      modules:[
+        {no:1,title:"AI 产品基础",title_en:"AI Product Basics",task:"AI 产品能力地图",task_en:"AI product capability map"},
+        {no:2,title:"与传统产品差异",title_en:"vs Traditional Products",task:"AI 产品机会分析",task_en:"AI product opportunity analysis"},
+        {no:3,title:"Prompt 与交互",title_en:"Prompt & Interaction",task:"AI 交互方案",task_en:"AI interaction design"},
+        {no:4,title:"RAG / 知识库",title_en:"RAG / Knowledge Base",task:"知识库产品 PRD",task_en:"KB product PRD"},
+        {no:5,title:"Agent 工作流",title_en:"Agent Workflow",task:"Agent 流程图",task_en:"Agent flow diagram"},
+        {no:6,title:"多模态能力",title_en:"Multimodal",task:"多模态功能方案",task_en:"Multimodal feature plan"},
+        {no:7,title:"评估体系",title_en:"Evaluation",task:"评估指标 + 测试集",task_en:"Metrics + test set"},
+        {no:8,title:"成本 / 延迟 / 体验",title_en:"Cost / Latency / UX",task:"工程约束表",task_en:"Engineering constraints table"},
+        {no:9,title:"风险安全合规",title_en:"Risk & Compliance",task:"AI 产品风险清单",task_en:"AI product risk list"},
+        {no:10,title:"商业化落地",title_en:"Commercialization",task:"完整 AI 产品方案",task_en:"Full AI product plan"}
+      ],
+      deliverables:["10 节教案 + PPT 文案","AI 产品 PRD 模板","Agent 工作流设计模板","AI 产品评估指标表","5 个完整 AI 产品案例","1 节免费公开课","1 个落地页文案"],
+      deliverables_en:["10 lesson plans + PPT copy","AI product PRD template","Agent workflow design template","AI product eval metrics table","5 full AI product cases","1 free public class","1 landing-page copy"],
+      validationGood:["不只讲概念，须出产品文档 + 流程图","学完能与技术团队讨论实现路径"],
+      validationGood_en:["Not just concepts; must produce product docs + flow diagrams","After completion, can discuss implementation with engineering"],
+      validationBad:["须体现 AI 不确定性、评估、容错、人工介入"],
+      validationBad_en:["Must reflect AI uncertainty, evaluation, fault-tolerance, human-in-the-loop"],
+      weights:{素养:4,使用:4,协作:4,工作流:5,产品:5}, weights_en:{Literacy:4,Use:4,Collaborate:4,Workflow:5,Product:5},
+      dir:"产品经理进阶营", dir_en:"产品经理进阶营"
+    }
+  ],
+  capabilities:[
+    {name:"AI 素养",name_en:"AI Literacy",meaning:"理解 AI 能做什么、不能做什么、有哪些风险",meaning_en:"Understand what AI can/can't do and its risks",personas:"全部人群",personas_en:"All audiences"},
+    {name:"AI 使用能力",name_en:"AI Usage",meaning:"会用 AI 完成学习 / 工作 / 创作任务",meaning_en:"Use AI for study / work / creative tasks",personas:"学生、职场人",personas_en:"Students, professionals"},
+    {name:"AI 协作能力",name_en:"AI Collaboration",meaning:"能把 AI 当助手、教练、同事协作",meaning_en:"Treat AI as assistant, coach, or colleague",personas:"大学生、职场人、PM",personas_en:"University, professionals, PM"},
+    {name:"AI 工作流能力",name_en:"AI Workflow",meaning:"能把 AI 嵌入固定流程，提高效率和质量",meaning_en:"Embed AI into fixed workflows for efficiency",personas:"职场人、PM",personas_en:"Professionals, PM"},
+    {name:"AI 产品创造能力",name_en:"AI Product Creation",meaning:"能设计 AI 产品、Agent、自动化系统",meaning_en:"Design AI products, Agents, automation",personas:"PM、大学生进阶",personas_en:"PM, advanced university"}
+  ],
+  roadmap:[
+    {phase:"第一阶段 · MVP",phase_en:"Phase 1 · MVP",tag:"先验证付费意愿与商业价值",tag_en:"Validate willingness-to-pay and business value",items:["AI 工作提效实战营（职场人，P0）","AI 产品经理进阶营（PM，P0）","两套落地页文案","两套试听课 / 免费公开课","两套模板工具包"],
+      items_en:["AI Workplace Productivity Camp (Professionals, P0)","AI PM Advanced Camp (PM, P0)","Two landing-page copies","Two trial / free public classes","Two template toolkits"]},
+    {phase:"第二阶段 · 扩展学生儿童",phase_en:"Phase 2 · Expand Students & Kids",tag:"建立品牌与长期教育合作",tag_en:"Build brand and long-term education partnerships",items:["AI 学习力训练营（中学生）","AI 项目与职业能力营（大学生）","AI 创造力启蒙营（儿童 + 家长）","家长说明书","学校 / 机构合作版"],
+      items_en:["AI Study Skills Camp (secondary)","AI Projects & Career Camp (university)","AI Creativity Camp (kids + parents)","Parent guide","School / institution edition"]},
+    {phase:"第三阶段 · 平台化",phase_en:"Phase 3 · Platformize",tag:"从课程包到学习产品",tag_en:"From course kits to learning products",items:["AI 能力测评与证书体系","分人群学习路径推荐","任务打卡与进度追踪","作品集展示社区","企业 / 学校团培版"],
+      items_en:["AI assessment & certificate system","Per-audience learning-path recommendations","Task check-in & progress tracking","Portfolio showcase community","Enterprise / school group edition"]}
+  ],
+  resources:[
+    {category:"AI 基础 / GenAI",category_en:"AI Basics / GenAI",items:[
+      {repo:"microsoft/AI-For-Beginners",aud:"中学生/大学生/教师",aud_en:"Secondary/University/Teachers",note:"12 周 24 课框架",note_en:"12-week, 24-lesson framework"},
+      {repo:"microsoft/generative-ai-for-beginners",aud:"大学生/PM/技术",aud_en:"University/PM/Tech",note:"GenAI 应用入门",note_en:"GenAI app intro"},
+      {repo:"openai/openai-cookbook",aud:"大学生/PM/技术",aud_en:"University/PM/Tech",note:"API 实战",note_en:"API in practice"},
+      {repo:"mlabonne/llm-course",aud:"大学生技术进阶",aud_en:"University tech advance",note:"偏深度",note_en:"More in-depth"},
+      {repo:"DataTalksClub/llm-zoomcamp",aud:"大学生/工程",aud_en:"University/Eng",note:"RAG/知识库实战",note_en:"RAG/KB in practice"}
+    ]},
+    {category:"Prompt / AI 使用",category_en:"Prompt / AI Usage",items:[
+      {repo:"dair-ai/Prompt-Engineering-Guide",aud:"学生/职场/PM",aud_en:"Students/Work/PM",note:"方法论全",note_en:"Full methodology"},
+      {repo:"thinkingjimmy/Learning-Prompt",aud:"职场/中文",aud_en:"Work/Chinese",note:"本地化表达",note_en:"Localized expression"}
+    ]},
+    {category:"中文开发 / 产品构建",category_en:"Chinese Dev / Product Building",items:[
+      {repo:"datawhalechina/llm-universe",aud:"大学生/初级开发者",aud_en:"University/Junior dev",note:"小白应用开发",note_en:"Beginner app dev"},
+      {repo:"datawhalechina/easy-vibe",aud:"大学生/PM",aud_en:"University/PM",note:"vibe coding / AI-native 产品",note_en:"vibe coding / AI-native product"}
+    ]},
+    {category:"儿童 / K12",category_en:"Kids / K12",items:[
+      {repo:"touretzkyds/ai4k12",aud:"儿童/中小学师",aud_en:"Kids/K-12 teachers",note:"AI for K-12 框架",note_en:"AI for K-12 framework"},
+      {repo:"chinasatokolo/BeyondAIHype",aud:"中高中生",aud_en:"Secondary students",note:"AI literacy workshop 设计",note_en:"AI literacy workshop design"}
+    ]},
+    {category:"PM / Agent 工作法",category_en:"PM / Agent Methods",items:[
+      {repo:"deanpeters/Product-Manager-Skills",aud:"PM",aud_en:"PM",note:"面向 AI agents 的 PM 技能框架",note_en:"PM skills framework for AI agents"},
+      {repo:"product-on-purpose/pm-skills",aud:"PM/协作",aud_en:"PM/Collab",note:"工作流/模板/样例多",note_en:"Many workflows/templates/samples"},
+      {repo:"aza-ali/awesome-ai-product-management",aud:"PM",aud_en:"PM",note:"资源合集",note_en:"Resource collection"},
+      {repo:"minicoohei/ai-agent-camp",aud:"非工程师/PM/职场",aud_en:"Non-eng/PM/Work",note:"Agent 训练课",note_en:"Agent training course"}
+    ]}
+  ],
+  risk:[
+    "AI 可能出错，不可全信——所有输出需人工核对。",
+    "学生不可用 AI 直接代写、代做论文或作业。",
+    "职场人不可上传公司机密、客户隐私、未公开数据。",
+    "产品经理不可只炫技，须看真实用户价值。",
+    "儿童使用 AI 须家长 / 老师陪伴。",
+    "医疗 / 法律 / 金融等高风险场景，AI 仅辅助整理信息，不替代专业判断。"
+  ],
+  risk_en:[
+    "AI can be wrong — never trust blindly; all output needs human verification.",
+    "Students must not use AI to write papers or do homework on their behalf.",
+    "Professionals must not upload company secrets, customer PII, or unpublished data.",
+    "Product managers must not show off technique only — focus on real user value.",
+    "Children must use AI with parent / teacher supervision.",
+    "In high-risk domains (medical / legal / financial), AI only assists in organizing info, not replacing professional judgment."
+  ],
+  quiz:[
+    {q:"你目前的主要身份是？",q_en:"What is your main identity right now?",opts:[
+      {t:"儿童（或家长代选）",t_en:"Child (or parent choosing)",tag:"kids"},{t:"中学生",t_en:"Secondary student",tag:"teen"},
+      {t:"大学生 / 研究生 / 应届",t_en:"University / Grad / New Grad",tag:"uni"},{t:"在职职场人",t_en:"Working professional",tag:"work"},
+      {t:"产品经理 / 创业者",t_en:"Product manager / Founder",tag:"pm"}
+    ]},
+    {q:"你最想用 AI 解决什么？",q_en:"What do you most want AI to solve?",opts:[
+      {t:"激发创造力、安全玩 AI",t_en:"Spark creativity, play with AI safely",tag:"kids"},{t:"提升学习效率与成绩",t_en:"Boost study efficiency & grades",tag:"teen"},
+      {t:"做项目、求职、建作品集",t_en:"Build projects, job-hunt, portfolio",tag:"uni"},{t:"每天工作提效、减重复劳动",t_en:"Daily productivity, less repetition",tag:"work"},
+      {t:"设计 AI 产品 / Agent 系统",t_en:"Design AI products / Agent systems",tag:"pm"}
+    ]},
+    {q:"你当前对 AI 的熟悉程度？",q_en:"How familiar are you with AI now?",opts:[
+      {t:"几乎没用过，先启蒙",t_en:"Barely used, need intro",tag:"kids"},{t:"会用一点，想学会学习",t_en:"Some use, want to learn",tag:"teen"},
+      {t:"会用工具，想做项目",t_en:"Can use tools, want projects",tag:"uni"},{t:"用过，想嵌入工作流",t_en:"Used it, want workflows",tag:"work"},
+      {t:"很熟，想设计产品",t_en:"Very familiar, want to design",tag:"pm"}
+    ]},
+    {q:"你最在意的成果是？",q_en:"What outcome matters most to you?",opts:[
+      {t:"有趣的创作作品",t_en:"Fun creative works",tag:"kids"},{t:"更好用的学习助手",t_en:"Better study assistant",tag:"teen"},
+      {t:"能写进简历的作品集",t_en:"Resume-worthy portfolio",tag:"uni"},{t:"个人 AI 工作流工具包",t_en:"Personal AI workflow toolkit",tag:"work"},
+      {t:"AI 产品方案与原型",t_en:"AI product plan & prototype",tag:"pm"}
+    ]}
+  ]
+};
+
+/* ============ RENDER ============ */
+const $ = s=>document.querySelector(s);
+const personaById = id=>DATA.personas.find(p=>p.id===id);
+let LANG = "zh";
+
+function pick(o, zhKey, enKey){ return LANG==="zh" ? o[zhKey] : (o[enKey]!==undefined?o[enKey]:o[zhKey]); }
+function g(key){ return T[LANG][key]; }
+
+function personaCard(p, withRibbon=true){
+  const name = LANG==="zh"?p.name:p.name_en;
+  const aud = LANG==="zh"?p.audience:p.audience_en;
+  const goal = LANG==="zh"?p.goal:p.goal_en;
+  const outcome = LANG==="zh"?p.outcome:p.outcome_en;
+  const ribbon = LANG==="zh"?p.priority:p.priority;
+  return `<div class="pcard" data-id="${p.id}">
+    ${withRibbon?`<div class="ribbon ${p.priority.toLowerCase()}">${ribbon}</div>`:""}
+    <div class="ic" style="background:${p.color}22;color:${p.color}">${p.icon}</div>
+    <h3>${name}</h3>
+    <div class="aud">${aud}</div>
+    <div class="goal">${goal}</div>
+    <div class="out">🎯 ${g("outcome")}：${outcome}</div>
+  </div>`;
+}
+
+function renderDetail(p){
+  const d = $("#detail");
+  const modRows = p.modules.map(m=>`<tr><td>${m.no}</td><td>${LANG==="zh"?m.title:m.title_en}</td><td>${LANG==="zh"?m.task:m.task_en}</td></tr>`).join("");
+  const w = LANG==="zh"?p.weights:p.weights_en;
+  const radar = Object.keys(w).map(k=>{
+    const v=w[k]; const pct=v/5*100;
+    const label = k.length>3?k.slice(0,3):k; // Chinese key fallback
+    return `<div class="barline"><div class="nm">${k}</div><div class="track"><div class="fill" style="width:${pct}%"></div></div><div class="val">${v}</div></div>`;
+  }).join("");
+  const dir = LANG==="zh"?p.dir:p.dir_en;
+  d.innerHTML = `
+    <div class="dhead">
+      <div class="ic" style="background:${p.color}22;color:${p.color}">${p.icon}</div>
+      <div><h3>${LANG==="zh"?p.name:p.name_en}</h3><div class="aud">${LANG==="zh"?p.audience:p.audience_en} · <span class="ribbon ${p.priority.toLowerCase()}">${p.priority}</span></div>
+      <div style="margin-top:6px"><a href="course-content/${dir}/" target="_blank" style="font-size:13px;font-weight:700">${g("openDir")}（${dir}）</a></div></div>
+    </div>
+    <div class="kv">
+      <div class="k">${g("coreGoal")}</div><div class="v">${LANG==="zh"?p.goal:p.goal_en}</div>
+      <div class="k">${g("focus")}</div><div class="v"><div class="chips">${(LANG==="zh"?p.focus:p.focus_en).map(f=>`<span class="chip">${f}</span>`).join("")}</div></div>
+      <div class="k">${g("outcome")}</div><div class="v">${LANG==="zh"?p.outcome:p.outcome_en}</div>
+    </div>
+    <h3 style="font-size:15px;margin:6px 0 4px">${g("modules")}（${p.modules.length}）</h3>
+    <table class="moduletable"><thead><tr><th>#</th><th>${LANG==="zh"?"主题":"Topic"}</th><th>${g("taskOut")}</th></tr></thead><tbody>${modRows}</tbody></table>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px" class="capwrap2">
+      <div>
+        <h3 style="font-size:15px;margin:6px 0 8px">${g("weights")}</h3>
+        ${radar}
+        <h3 style="font-size:15px;margin:18px 0 8px">${g("deliver")}</h3>
+        <ul class="vlist">${(LANG==="zh"?p.deliverables:p.deliverables_en).map(x=>`<li>${x}</li>`).join("")}</ul>
+      </div>
+      <div>
+        <h3 style="font-size:15px;margin:6px 0 8px;color:var(--good)">${g("mustGood")}</h3>
+        <ul class="vlist">${(LANG==="zh"?p.validationGood:p.validationGood_en).map(x=>`<li>${x}</li>`).join("")}</ul>
+        <h3 style="font-size:15px;margin:18px 0 8px;color:var(--bad)">${g("mustBad")}</h3>
+        <ul class="vlist bad">${(LANG==="zh"?p.validationBad:p.validationBad_en).map(x=>`<li>${x}</li>`).join("")}</ul>
+      </div>
+    </div>`;
+  d.classList.add("show");
+  if(d.scrollIntoView) d.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+function renderAll(){
+  // texts
+  $("#brandText").textContent = g("brand");
+  document.title = LANG==="zh" ? "AI 技能升级课程体系 · 交互规划台" : "AI Skills Curriculum · Interactive Planner";
+  const navBtns = document.querySelectorAll("#nav button");
+  g("nav").forEach((t,i)=>{ if(navBtns[i]) navBtns[i].textContent=t; });
+  $("#heroTitle").textContent = g("heroTitle");
+  $("#heroDesc").textContent = g("heroDesc");
+  $("#heroTags").innerHTML = g("heroTags").map(t=>`<span>${t}</span>`).join("");
+  $("#ovTitle").textContent = g("ovTitle"); $("#ovDesc").textContent = g("ovDesc");
+  $("#coTitle").textContent = g("coTitle"); $("#coDesc").textContent = g("coDesc");
+  $("#capTitle").textContent = g("capTitle"); $("#capDesc").textContent = g("capDesc");
+  $("#capTh1").textContent=g("capTh")[0]; $("#capTh2").textContent=g("capTh")[1]; $("#capTh3").textContent=g("capTh")[2];
+  $("#rmTitle").textContent = g("rmTitle"); $("#rmDesc").textContent = g("rmDesc");
+  $("#qzTitle").textContent = g("qzTitle"); $("#qzDesc").textContent = g("qzDesc");
+  $("#rsTitle").textContent = g("rsTitle"); $("#rsDesc").textContent = g("rsDesc");
+  $("#rkTitle").textContent = g("rkTitle"); $("#rkDesc").textContent = g("rkDesc");
+  $("#quizBtn").textContent = g("quizBtn");
+  $("#ftText").textContent = g("ft");
+  // grids
+  $("#overviewGrid").innerHTML = DATA.personas.map(p=>personaCard(p)).join("");
+  $("#courseGrid").innerHTML = DATA.personas.map(p=>personaCard(p)).join("");
+  // capability table
+  $("#capTbody").innerHTML = DATA.capabilities.map(c=>
+    `<tr><td style="font-weight:700">${LANG==="zh"?c.name:c.name_en}</td><td>${LANG==="zh"?c.meaning:c.meaning_en}</td><td style="color:var(--sub)">${LANG==="zh"?c.personas:c.personas_en}</td></tr>`).join("");
+  $("#capBars").innerHTML = `<h3 style="font-size:15px;margin-bottom:12px">${LANG==="zh"?"各主线能力权重对比":"Capability Weights by Track"}</h3>` +
+    DATA.personas.map(p=>{
+      const w=LANG==="zh"?p.weights:p.weights_en;
+      const bars=Object.keys(w).map(k=>{
+        const pct=w[k]/5*100;
+        return `<div class="barline"><div class="nm">${k}</div><div class="track"><div class="fill" style="width:${pct}%;background:${p.color}"></div></div><div class="val">${w[k]}</div></div>`;
+      }).join("");
+      return `<div style="margin-bottom:16px"><div style="font-weight:700;font-size:13.5px;margin-bottom:5px;color:${p.color}">${p.icon} ${LANG==="zh"?p.name:p.name_en}</div>${bars}</div>`;
+    }).join("");
+  // roadmap
+  $("#roadmapInner").innerHTML = DATA.roadmap.map(r=>
+    `<div class="phase"><h3>${LANG==="zh"?r.phase:r.phase_en}</h3><div class="ptag">${LANG==="zh"?r.tag:r.tag_en}</div><ul>${(LANG==="zh"?r.items:r.items_en).map(i=>`<li>${i}</li>`).join("")}</ul></div>`).join("");
+  // resources
+  $("#resBox").innerHTML = DATA.resources.map(gr=>
+    `<div class="resgroup"><h3>${LANG==="zh"?gr.category:gr.category_en}</h3><div class="reslist">${gr.items.map(it=>
+      `<div class="resitem"><span class="repo">${it.repo}</span><span class="aud">→ ${LANG==="zh"?it.aud:it.aud_en}</span><div class="note">${LANG==="zh"?it.note:it.note_en}</div></div>`).join("")}</div></div>`).join("");
+  // risk
+  $("#riskList").innerHTML = (LANG==="zh"?DATA.risk:DATA.risk_en).map(r=>`<li><span class="ic">⚠</span><span>${r}</span></li>`).join("");
+  // quiz
+  $("#quizBox").innerHTML = DATA.quiz.map((q,i)=>`
+    <div class="qcard">
+      <div class="qn"><span class="n">${i+1}</span><span>${LANG==="zh"?q.q:q.q_en}</span></div>
+      <div class="opts">${q.opts.map(o=>`<div class="opt" data-q="${i}" data-tag="${o.tag}"><span class="box"></span><span>${LANG==="zh"?o.t:o.t_en}</span></div>`).join("")}</div>
+    </div>`).join("");
+  // refresh detail if open
+  const d=$("#detail");
+  if(d.classList.contains("show") && d.dataset.id){
+    renderDetail(personaById(d.dataset.id));
+  }
+}
+
+/* Course grid click */
+document.querySelectorAll("#courseGrid").forEach(gr=>{
+  gr.addEventListener("click",e=>{
+    const card=e.target.closest(".pcard"); if(!card)return;
+    const id=card.dataset.id; const p=personaById(id);
+    const d=$("#detail");
+    if(d.classList.contains("show") && d.dataset.id===id){d.classList.remove("show");delete d.dataset.id;return;}
+    renderDetail(p); d.dataset.id=id;
+  });
+});
+
+/* Quiz interactions (rebind each render) */
+function bindQuiz(){
+  $("#quizBox").onclick = e=>{
+    const opt=e.target.closest(".opt"); if(!opt)return;
+    const qi=opt.dataset.q;
+    document.querySelectorAll(`.opt[data-q="${qi}"]`).forEach(o=>o.classList.remove("sel"));
+    opt.classList.add("sel");
+    quizState.sel = quizState.sel||{}; quizState.sel[qi]=opt.dataset.tag;
+    $("#quizBtn").disabled = Object.keys(quizState.sel).length<4;
+  };
+  $("#quizBtn").onclick = ()=>{
+    const counts={};
+    Object.values(quizState.sel).forEach(t=>counts[t]=(counts[t]||0)+1);
+    let best="work",max=0;
+    Object.entries(counts).forEach(([k,v])=>{if(v>max){max=v;best=k;}});
+    const p=personaById(best);
+    const step = best==="work" ? (LANG==="zh"?"MVP A：先生产 8 节《AI 工作提效实战营》+ 6 岗位工具包":"MVP A: produce 8-lesson Workplace Camp + 6 role toolkits")
+              : best==="pm" ? (LANG==="zh"?"MVP B：先生产 10 节《AI 产品经理进阶营》+ PRD/Agent 模板":"MVP B: produce 10-lesson PM Camp + PRD/Agent templates")
+              : best==="kids" ? (LANG==="zh"?"先打磨亲子课 8 节 + 家长指南 + 安全手册":"Polish 8 parent-child lessons + parent guide + safety handbook")
+              : best==="teen" ? (LANG==="zh"?"先设计 8 节学习力训练营 + 三场景版本":"Design 8-lesson Study Skills Camp + 3-scenario versions")
+              : (LANG==="zh"?"先搭建 8–10 节项目营 + 3 个毕业项目 + 作品集模板":"Build 8–10-lesson Projects Camp + 3 capstones + portfolio template");
+    const r=$("#quizResult");
+    r.innerHTML = `
+      <div class="match">
+        <div class="ic" style="background:${p.color}22;color:${p.color}">${p.icon}</div>
+        <div><h3>${LANG==="zh"?"为你匹配：":"Best match:"} ${LANG==="zh"?p.name:p.name_en}</h3><div class="sub">${LANG==="zh"?p.audience:p.audience_en} · <span class="ribbon ${p.priority.toLowerCase()}">${p.priority}</span></div></div>
+      </div>
+      <div class="line">🎯 <b>${g("outcome")}</b>：${LANG==="zh"?p.outcome:p.outcome_en}</div>
+      <div class="line">📦 <b>${LANG==="zh"?"核心交付物":"Core Deliverables"}</b>：${(LANG==="zh"?p.deliverables:p.deliverables_en).slice(0,3).join(" / ")} …</div>
+      <div class="line">🚀 <b>${LANG==="zh"?"建议起步":"Suggested Start"}</b>：${step}</div>
+      <div class="line" style="color:var(--sub);font-size:13px">${LANG==="zh"?"匹配依据：4 题共":"Match basis: 4 questions, total"} ${Object.values(quizState.sel).length} ${LANG==="zh"?"票，命中":"votes, hit"} ${max} ${LANG==="zh"?"票 →":"votes →"} ${LANG==="zh"?p.name:p.name_en}。</div>`;
+    r.classList.add("show");
+    if(r.scrollIntoView) r.scrollIntoView({behavior:"smooth",block:"start"});
+  };
+}
+const quizState = {sel:{}};
+
+/* Nav */
+$("#nav").addEventListener("click",e=>{
+  const b=e.target.closest("button"); if(!b)return;
+  document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  const sec=b.dataset.sec;
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("show"));
+  $("#"+sec).classList.add("show");
+  window.scrollTo({top:0,behavior:"smooth"});
+});
+
+/* Lang switch */
+document.querySelectorAll(".langswitch button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll(".langswitch button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    LANG=b.dataset.lang;
+    renderAll();
+    bindQuiz();
+  });
+});
+
+/* init */
+renderAll();
+bindQuiz();
+</script>
+</body>
+</html>
