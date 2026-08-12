@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 项目与职业能力营 · 大学生/研究生</title>
+<style>
+  :root{--bg:#0f1117;--card:#1a1d27;--fg:#e8eaf0;--sub:#9aa3b2;--accent:#4f8cff;--bd:#262a36}
+  @media(prefers-color-scheme:light){:root{--bg:#f6f7fb;--card:#fff;--fg:#1a1d27;--sub:#5a6271;--accent:#2563eb;--bd:#e3e6ee}}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;background:var(--bg);color:var(--fg);line-height:1.7}
+  header{padding:22px 20px;text-align:center;border-bottom:1px solid var(--bd)}
+  header a{color:var(--accent);text-decoration:none;font-size:14px}
+  h1{font-size:21px;margin:6px 0 0}
+  .wrap{max-width:980px;margin:0 auto;padding:18px 16px 60px;display:flex;gap:18px}
+  nav{width:230px;flex:none;align-self:flex-start;position:sticky;top:14px;max-height:92vh;overflow:auto;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px}
+  nav h3{font-size:13px;color:var(--sub);margin:8px 10px 4px}
+  nav a{display:block;padding:6px 10px;border-radius:8px;color:var(--fg);text-decoration:none;font-size:13.5px}
+  nav a:hover{background:var(--accent);color:#fff}
+  nav a.active{background:var(--accent);color:#fff}
+  main{flex:1;min-width:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:22px 24px}
+  main h1,main h2,main h3{line-height:1.35}
+  main h1{border-left:4px solid var(--accent);padding-left:10px;margin-top:0}
+  main pre{background:#0c0e14;color:#e6e6e6;padding:12px;border-radius:8px;overflow:auto;font-size:13px}
+  @media(prefers-color-scheme:light){main pre{background:#1e2230;color:#e6e6e6}}
+  main code{background:rgba(127,127,127,.18);padding:1px 5px;border-radius:4px;font-size:13px}
+  main pre code{background:none;padding:0}
+  main blockquote{border-left:3px solid var(--accent);margin:10px 0;padding:4px 14px;color:var(--sub);background:rgba(79,140,255,.07)}
+  main table{border-collapse:collapse;width:100%;margin:12px 0}
+  main th,main td{border:1px solid var(--bd);padding:6px 10px;font-size:14px}
+  @media(max-width:720px){.wrap{flex-direction:column}.wrap nav{width:auto;position:static;max-height:none}}
+</style>
+</head>
+<body>
+<header>
+  <a href="../ai-curriculum.html">← 返回课程矩阵</a>
+  <h1>AI 项目与职业能力营 · 大学生/研究生</h1>
+</header>
+<div class="wrap">
+  <nav><h3>课件目录</h3><div id="toc"></div></nav>
+  <main id="content"><p style="color:var(--sub)">正在加载课件…</p></main>
+</div>
+<script>
+const MD = (function(){
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function inline(s){
+    s = esc(s);
+    s = s.replace(/`([^`]+)`/g,'<code>$1</code>');
+    s = s.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+    s = s.replace(/(^|[^*])\*([^*]+)\*/g,'$1<em>$2</em>');
+    s = s.replace(/\[([^\]]+)\]\((https?:[^\\)]+)\)/g,'<a href="$2" target="_blank" rel="noopener">$1</a>');
+    return s;
+  }
+  function render(md){
+    const lines = md.replace(/\r\n/g,'\n').split('\n');
+    let h='', i=0, inCode=false, code='';
+    const flushCode=()=>{ if(inCode){ h+='<pre><code>'+esc(code)+'</code></pre>'; code=''; inCode=false; } };
+    while(i<lines.length){
+      let l=lines[i];
+      if(l.trim().startsWith('```')){ if(inCode){flushCode();} else {flushCode(); inCode=true;} i++; continue; }
+      if(inCode){ code+=l+'\n'; i++; continue; }
+      let m;
+      if(m=l.match(/^(#{1,6})\s+(.*)$/)){ const n=m[1].length; h+='<h'+n+'>'+inline(m[2])+'</h'+n+'>'; i++; continue; }
+      if(l.match(/^(\-{3,}|\*{3,})$/)){ h+='<hr>'; i++; continue; }
+      if(l.match(/^>\s?/)){ let q=''; while(i<lines.length && lines[i].match(/^>\s?/)){ q+=lines[i].replace(/^>\s?/,'')+'<br>'; i++; } h+='<blockquote>'+inline(q)+'</blockquote>'; continue; }
+      if(m=l.match(/^(\s*)([-*+]|\d+\.)\s+(.*)$/)){
+        const ord = /\d+\./.test(m[2]); let items='';
+        while(i<lines.length && lines[i].match(/^(\s*)([-*+]|\d+\.)\s+/)){
+          const mm=lines[i].match(/^(\s*)([-*+]|\d+\.)\s+(.*)$/);
+          items+='<li>'+inline(mm[3])+'</li>'; i++;
+        }
+        h+= (ord?'<ol>':'<ul>')+items+(ord?'</ol>':'</ul>'); continue;
+      }
+      if(l.trim()===''){ i++; continue; }
+      h+='<p>'+inline(l)+'</p>'; i++;
+    }
+    flushCode();
+    return h;
+  }
+  return {render:render};
+})();
+
+const FILES = ["大学生项目职业能力营/00-课程总览.md", "大学生项目职业能力营/01-AI学习与职业定位.md", "大学生项目职业能力营/02-AI资料调研.md", "大学生项目职业能力营/03-AI论文和资料阅读.md", "大学生项目职业能力营/04-AI数据分析入门.md", "大学生项目职业能力营/05-AI辅助简历和面试.md", "大学生项目职业能力营/06-AI项目设计.md", "大学生项目职业能力营/07-AI应用原型.md", "大学生项目职业能力营/08-作品集包装.md", "大学生项目职业能力营/09-三个毕业项目.md", "大学生项目职业能力营/10-作品集模板.md", "大学生项目职业能力营/00-课程总览-en.md", "大学生项目职业能力营/01-AI学习与职业定位-en.md", "大学生项目职业能力营/02-AI资料调研-en.md", "大学生项目职业能力营/03-AI论文和资料阅读-en.md", "大学生项目职业能力营/04-AI数据分析入门-en.md", "大学生项目职业能力营/05-AI辅助简历和面试-en.md", "大学生项目职业能力营/06-AI项目设计-en.md", "大学生项目职业能力营/07-AI应用原型-en.md", "大学生项目职业能力营/08-作品集包装-en.md", "大学生项目职业能力营/09-三个毕业项目-en.md", "大学生项目职业能力营/10-作品集模板-en.md"];
+const toc=document.getElementById('toc'), content=document.getElementById('content');
+let cur=null;
+function load(name){
+  if(cur) cur.classList.remove('active');
+  cur=[...toc.children].find(a=>a.dataset.f===name); if(cur)cur.classList.add('active');
+  content.scrollTop=0; window.scrollTo(0,0);
+  fetch(name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    content.innerHTML='<h1>'+name.replace(/^.*\//,'').replace(/\.md$/,'')+'</h1>'+MD.render(t);
+  }).catch(()=>{ content.innerHTML='<p style="color:var(--sub)">加载失败，请确认文件已部署。</p>'; });
+  location.hash=encodeURIComponent(name);
+}
+FILES.forEach(f=>{
+  const a=document.createElement('a'); a.href='#'; a.textContent=f.replace(/^.*\//,'').replace(/\.md$/,''); a.dataset.f=f;
+  a.onclick=e=>{e.preventDefault();load(f)}; toc.appendChild(a);
+});
+const h=decodeURIComponent(location.hash.slice(1));
+load(FILES.includes(h)?h:FILES[0]);
+</script>
+</body>
+</html>
