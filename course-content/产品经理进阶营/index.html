@@ -80,15 +80,20 @@ const MD = (function(){
   return {render:render};
 })();
 
-const FILES = ["产品经理进阶营/00-课程总览.md", "产品经理进阶营/01-AI产品基础.md", "产品经理进阶营/02-与传统产品差异.md", "产品经理进阶营/03-Prompt与交互.md", "产品经理进阶营/04-RAG与知识库.md", "产品经理进阶营/05-Agent工作流.md", "产品经理进阶营/06-多模态能力.md", "产品经理进阶营/07-评估体系.md", "产品经理进阶营/08-成本延迟体验.md", "产品经理进阶营/09-风险安全合规.md", "产品经理进阶营/10-商业化落地.md", "产品经理进阶营/11-PRD模板.md", "产品经理进阶营/12-Agent工作流模板.md", "产品经理进阶营/13-评估指标表.md", "产品经理进阶营/_本地参考素材.md", "产品经理进阶营/00-课程总览-en.md", "产品经理进阶营/01-AI产品基础-en.md", "产品经理进阶营/02-与传统产品差异-en.md", "产品经理进阶营/03-Prompt与交互-en.md", "产品经理进阶营/04-RAG与知识库-en.md", "产品经理进阶营/05-Agent工作流-en.md", "产品经理进阶营/06-多模态能力-en.md", "产品经理进阶营/07-评估体系-en.md", "产品经理进阶营/08-成本延迟体验-en.md", "产品经理进阶营/09-风险安全合规-en.md", "产品经理进阶营/10-商业化落地-en.md", "产品经理进阶营/11-PRD模板-en.md", "产品经理进阶营/12-Agent工作流模板-en.md", "产品经理进阶营/13-评估指标表-en.md"];
+const FILES = ["00-课程总览.md", "01-AI产品基础.md", "02-与传统产品差异.md", "03-Prompt与交互.md", "04-RAG与知识库.md", "05-Agent工作流.md", "06-多模态能力.md", "07-评估体系.md", "08-成本延迟体验.md", "09-风险安全合规.md", "10-商业化落地.md", "11-PRD模板.md", "12-Agent工作流模板.md", "13-评估指标表.md", "_本地参考素材.md", "00-课程总览-en.md", "01-AI产品基础-en.md", "02-与传统产品差异-en.md", "03-Prompt与交互-en.md", "04-RAG与知识库-en.md", "05-Agent工作流-en.md", "06-多模态能力-en.md", "07-评估体系-en.md", "08-成本延迟体验-en.md", "09-风险安全合规-en.md", "10-商业化落地-en.md", "11-PRD模板-en.md", "12-Agent工作流模板-en.md", "13-评估指标表-en.md"];
 const toc=document.getElementById('toc'), content=document.getElementById('content');
 let cur=null;
 function load(name){
   if(cur) cur.classList.remove('active');
   cur=[...toc.children].find(a=>a.dataset.f===name); if(cur)cur.classList.add('active');
   content.scrollTop=0; window.scrollTo(0,0);
-  fetch(name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-    content.innerHTML='<h1>'+name.replace(/^.*\//,'').replace(/\.md$/,'')+'</h1>'+MD.render(t);
+  fetch('./'+name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    // 若服务端误返回 HTML 文档(如 content-type=text/html 的 md), 取 <body> 文本
+    if(t.trim().startsWith('<!DOCTYPE')||t.trim().startsWith('<html')){
+      const doc=new DOMParser().parseFromString(t,'text/html');
+      t=doc.body?doc.body.innerText:t;
+    }
+    content.innerHTML='<h1>'+name.replace(/\.md$/,'')+'</h1>'+MD.render(t);
   }).catch(()=>{ content.innerHTML='<p style="color:var(--sub)">加载失败，请确认文件已部署。</p>'; });
   location.hash=encodeURIComponent(name);
 }

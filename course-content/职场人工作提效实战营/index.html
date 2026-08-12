@@ -80,15 +80,20 @@ const MD = (function(){
   return {render:render};
 })();
 
-const FILES = ["职场人工作提效实战营/00-课程总览.md", "职场人工作提效实战营/01-AI工具入门.md", "职场人工作提效实战营/02-写作和文档.md", "职场人工作提效实战营/03-会议和沟通.md", "职场人工作提效实战营/04-销售和客服.md", "职场人工作提效实战营/05-内容运营.md", "职场人工作提效实战营/06-表格和数据.md", "职场人工作提效实战营/07-管理和招聘.md", "职场人工作提效实战营/08-私人工作流.md", "职场人工作提效实战营/09-六岗位工具包.md", "职场人工作提效实战营/10-Prompt模板库.md", "职场人工作提效实战营/11-人工检查清单总表.md", "职场人工作提效实战营/00-课程总览-en.md", "职场人工作提效实战营/01-AI工具入门-en.md", "职场人工作提效实战营/02-写作和文档-en.md", "职场人工作提效实战营/03-会议和沟通-en.md", "职场人工作提效实战营/04-销售和客服-en.md", "职场人工作提效实战营/05-内容运营-en.md", "职场人工作提效实战营/06-表格和数据-en.md", "职场人工作提效实战营/07-管理和招聘-en.md", "职场人工作提效实战营/08-私人工作流-en.md", "职场人工作提效实战营/09-六岗位工具包-en.md", "职场人工作提效实战营/10-Prompt模板库-en.md", "职场人工作提效实战营/11-人工检查清单总表-en.md"];
+const FILES = ["00-课程总览.md", "01-AI工具入门.md", "02-写作和文档.md", "03-会议和沟通.md", "04-销售和客服.md", "05-内容运营.md", "06-表格和数据.md", "07-管理和招聘.md", "08-私人工作流.md", "09-六岗位工具包.md", "10-Prompt模板库.md", "11-人工检查清单总表.md", "00-课程总览-en.md", "01-AI工具入门-en.md", "02-写作和文档-en.md", "03-会议和沟通-en.md", "04-销售和客服-en.md", "05-内容运营-en.md", "06-表格和数据-en.md", "07-管理和招聘-en.md", "08-私人工作流-en.md", "09-六岗位工具包-en.md", "10-Prompt模板库-en.md", "11-人工检查清单总表-en.md"];
 const toc=document.getElementById('toc'), content=document.getElementById('content');
 let cur=null;
 function load(name){
   if(cur) cur.classList.remove('active');
   cur=[...toc.children].find(a=>a.dataset.f===name); if(cur)cur.classList.add('active');
   content.scrollTop=0; window.scrollTo(0,0);
-  fetch(name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-    content.innerHTML='<h1>'+name.replace(/^.*\//,'').replace(/\.md$/,'')+'</h1>'+MD.render(t);
+  fetch('./'+name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    // 若服务端误返回 HTML 文档(如 content-type=text/html 的 md), 取 <body> 文本
+    if(t.trim().startsWith('<!DOCTYPE')||t.trim().startsWith('<html')){
+      const doc=new DOMParser().parseFromString(t,'text/html');
+      t=doc.body?doc.body.innerText:t;
+    }
+    content.innerHTML='<h1>'+name.replace(/\.md$/,'')+'</h1>'+MD.render(t);
   }).catch(()=>{ content.innerHTML='<p style="color:var(--sub)">加载失败，请确认文件已部署。</p>'; });
   location.hash=encodeURIComponent(name);
 }

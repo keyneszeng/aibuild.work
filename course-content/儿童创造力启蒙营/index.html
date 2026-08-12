@@ -80,15 +80,20 @@ const MD = (function(){
   return {render:render};
 })();
 
-const FILES = ["儿童创造力启蒙营/00-课程总览.md", "儿童创造力启蒙营/01-AI是什么.md", "儿童创造力启蒙营/02-如何提问.md", "儿童创造力启蒙营/03-一起讲故事.md", "儿童创造力启蒙营/04-一起画角色.md", "儿童创造力启蒙营/05-认识世界.md", "儿童创造力启蒙营/06-AI也会错.md", "儿童创造力启蒙营/07-我的未来发明.md", "儿童创造力启蒙营/08-创作展示.md", "儿童创造力启蒙营/09-家长指南.md", "儿童创造力启蒙营/10-安全手册.md", "儿童创造力启蒙营/11-Prompt模板库(儿童版).md", "儿童创造力启蒙营/00-课程总览-en.md", "儿童创造力启蒙营/01-AI是什么-en.md", "儿童创造力启蒙营/02-如何提问-en.md", "儿童创造力启蒙营/03-一起讲故事-en.md", "儿童创造力启蒙营/04-一起画角色-en.md", "儿童创造力启蒙营/05-认识世界-en.md", "儿童创造力启蒙营/06-AI也会错-en.md", "儿童创造力启蒙营/07-我的未来发明-en.md", "儿童创造力启蒙营/08-创作展示-en.md", "儿童创造力启蒙营/09-家长指南-en.md", "儿童创造力启蒙营/10-安全手册-en.md", "儿童创造力启蒙营/11-Prompt模板库(儿童版)-en.md"];
+const FILES = ["00-课程总览.md", "01-AI是什么.md", "02-如何提问.md", "03-一起讲故事.md", "04-一起画角色.md", "05-认识世界.md", "06-AI也会错.md", "07-我的未来发明.md", "08-创作展示.md", "09-家长指南.md", "10-安全手册.md", "11-Prompt模板库(儿童版).md", "00-课程总览-en.md", "01-AI是什么-en.md", "02-如何提问-en.md", "03-一起讲故事-en.md", "04-一起画角色-en.md", "05-认识世界-en.md", "06-AI也会错-en.md", "07-我的未来发明-en.md", "08-创作展示-en.md", "09-家长指南-en.md", "10-安全手册-en.md", "11-Prompt模板库(儿童版)-en.md"];
 const toc=document.getElementById('toc'), content=document.getElementById('content');
 let cur=null;
 function load(name){
   if(cur) cur.classList.remove('active');
   cur=[...toc.children].find(a=>a.dataset.f===name); if(cur)cur.classList.add('active');
   content.scrollTop=0; window.scrollTo(0,0);
-  fetch(name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-    content.innerHTML='<h1>'+name.replace(/^.*\//,'').replace(/\.md$/,'')+'</h1>'+MD.render(t);
+  fetch('./'+name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    // 若服务端误返回 HTML 文档(如 content-type=text/html 的 md), 取 <body> 文本
+    if(t.trim().startsWith('<!DOCTYPE')||t.trim().startsWith('<html')){
+      const doc=new DOMParser().parseFromString(t,'text/html');
+      t=doc.body?doc.body.innerText:t;
+    }
+    content.innerHTML='<h1>'+name.replace(/\.md$/,'')+'</h1>'+MD.render(t);
   }).catch(()=>{ content.innerHTML='<p style="color:var(--sub)">加载失败，请确认文件已部署。</p>'; });
   location.hash=encodeURIComponent(name);
 }

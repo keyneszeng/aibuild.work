@@ -80,15 +80,20 @@ const MD = (function(){
   return {render:render};
 })();
 
-const FILES = ["大学生项目职业能力营/00-课程总览.md", "大学生项目职业能力营/01-AI学习与职业定位.md", "大学生项目职业能力营/02-AI资料调研.md", "大学生项目职业能力营/03-AI论文和资料阅读.md", "大学生项目职业能力营/04-AI数据分析入门.md", "大学生项目职业能力营/05-AI辅助简历和面试.md", "大学生项目职业能力营/06-AI项目设计.md", "大学生项目职业能力营/07-AI应用原型.md", "大学生项目职业能力营/08-作品集包装.md", "大学生项目职业能力营/09-三个毕业项目.md", "大学生项目职业能力营/10-作品集模板.md", "大学生项目职业能力营/00-课程总览-en.md", "大学生项目职业能力营/01-AI学习与职业定位-en.md", "大学生项目职业能力营/02-AI资料调研-en.md", "大学生项目职业能力营/03-AI论文和资料阅读-en.md", "大学生项目职业能力营/04-AI数据分析入门-en.md", "大学生项目职业能力营/05-AI辅助简历和面试-en.md", "大学生项目职业能力营/06-AI项目设计-en.md", "大学生项目职业能力营/07-AI应用原型-en.md", "大学生项目职业能力营/08-作品集包装-en.md", "大学生项目职业能力营/09-三个毕业项目-en.md", "大学生项目职业能力营/10-作品集模板-en.md"];
+const FILES = ["00-课程总览.md", "01-AI学习与职业定位.md", "02-AI资料调研.md", "03-AI论文和资料阅读.md", "04-AI数据分析入门.md", "05-AI辅助简历和面试.md", "06-AI项目设计.md", "07-AI应用原型.md", "08-作品集包装.md", "09-三个毕业项目.md", "10-作品集模板.md", "00-课程总览-en.md", "01-AI学习与职业定位-en.md", "02-AI资料调研-en.md", "03-AI论文和资料阅读-en.md", "04-AI数据分析入门-en.md", "05-AI辅助简历和面试-en.md", "06-AI项目设计-en.md", "07-AI应用原型-en.md", "08-作品集包装-en.md", "09-三个毕业项目-en.md", "10-作品集模板-en.md"];
 const toc=document.getElementById('toc'), content=document.getElementById('content');
 let cur=null;
 function load(name){
   if(cur) cur.classList.remove('active');
   cur=[...toc.children].find(a=>a.dataset.f===name); if(cur)cur.classList.add('active');
   content.scrollTop=0; window.scrollTo(0,0);
-  fetch(name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-    content.innerHTML='<h1>'+name.replace(/^.*\//,'').replace(/\.md$/,'')+'</h1>'+MD.render(t);
+  fetch('./'+name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    // 若服务端误返回 HTML 文档(如 content-type=text/html 的 md), 取 <body> 文本
+    if(t.trim().startsWith('<!DOCTYPE')||t.trim().startsWith('<html')){
+      const doc=new DOMParser().parseFromString(t,'text/html');
+      t=doc.body?doc.body.innerText:t;
+    }
+    content.innerHTML='<h1>'+name.replace(/\.md$/,'')+'</h1>'+MD.render(t);
   }).catch(()=>{ content.innerHTML='<p style="color:var(--sub)">加载失败，请确认文件已部署。</p>'; });
   location.hash=encodeURIComponent(name);
 }

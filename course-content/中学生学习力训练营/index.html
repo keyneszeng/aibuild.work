@@ -80,15 +80,20 @@ const MD = (function(){
   return {render:render};
 })();
 
-const FILES = ["中学生学习力训练营/00-总览.md", "中学生学习力训练营/01-AI学习助手入门.md", "中学生学习力训练营/02-如何问出好问题.md", "中学生学习力训练营/03-难题拆解.md", "中学生学习力训练营/04-英语和写作训练.md", "中学生学习力训练营/05-知识点复习.md", "中学生学习力训练营/06-信息真假判断.md", "中学生学习力训练营/07-演讲和表达.md", "中学生学习力训练营/08-个人学习助手设计.md", "中学生学习力训练营/09-Prompt模板库.md", "中学生学习力训练营/10-学术诚信模块.md", "中学生学习力训练营/00-总览-en.md", "中学生学习力训练营/01-AI学习助手入门-en.md", "中学生学习力训练营/02-如何问出好问题-en.md", "中学生学习力训练营/03-难题拆解-en.md", "中学生学习力训练营/04-英语和写作训练-en.md", "中学生学习力训练营/05-知识点复习-en.md", "中学生学习力训练营/06-信息真假判断-en.md", "中学生学习力训练营/07-演讲和表达-en.md", "中学生学习力训练营/08-个人学习助手设计-en.md", "中学生学习力训练营/09-Prompt模板库-en.md", "中学生学习力训练营/10-学术诚信模块-en.md"];
+const FILES = ["00-总览.md", "01-AI学习助手入门.md", "02-如何问出好问题.md", "03-难题拆解.md", "04-英语和写作训练.md", "05-知识点复习.md", "06-信息真假判断.md", "07-演讲和表达.md", "08-个人学习助手设计.md", "09-Prompt模板库.md", "10-学术诚信模块.md", "00-总览-en.md", "01-AI学习助手入门-en.md", "02-如何问出好问题-en.md", "03-难题拆解-en.md", "04-英语和写作训练-en.md", "05-知识点复习-en.md", "06-信息真假判断-en.md", "07-演讲和表达-en.md", "08-个人学习助手设计-en.md", "09-Prompt模板库-en.md", "10-学术诚信模块-en.md"];
 const toc=document.getElementById('toc'), content=document.getElementById('content');
 let cur=null;
 function load(name){
   if(cur) cur.classList.remove('active');
   cur=[...toc.children].find(a=>a.dataset.f===name); if(cur)cur.classList.add('active');
   content.scrollTop=0; window.scrollTo(0,0);
-  fetch(name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
-    content.innerHTML='<h1>'+name.replace(/^.*\//,'').replace(/\.md$/,'')+'</h1>'+MD.render(t);
+  fetch('./'+name).then(r=>{if(!r.ok)throw 0;return r.text()}).then(t=>{
+    // 若服务端误返回 HTML 文档(如 content-type=text/html 的 md), 取 <body> 文本
+    if(t.trim().startsWith('<!DOCTYPE')||t.trim().startsWith('<html')){
+      const doc=new DOMParser().parseFromString(t,'text/html');
+      t=doc.body?doc.body.innerText:t;
+    }
+    content.innerHTML='<h1>'+name.replace(/\.md$/,'')+'</h1>'+MD.render(t);
   }).catch(()=>{ content.innerHTML='<p style="color:var(--sub)">加载失败，请确认文件已部署。</p>'; });
   location.hash=encodeURIComponent(name);
 }
