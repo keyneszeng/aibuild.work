@@ -104,59 +104,6 @@
   letter-spacing: 0.5px;
 }
 
-/* 关于我 */
-.about-wrap {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 28px;
-  align-items: center;
-  padding: 32px;
-}
-
-.avatar {
-  width: 96px;
-  height: 96px;
-  border-radius: 22px;
-  object-fit: cover;
-  border: 2px solid var(--card-border-hover);
-  box-shadow: 0 0 30px var(--glow);
-}
-
-.about-info h3 {
-  font-size: 22px;
-  font-weight: 800;
-  margin-bottom: 4px;
-}
-
-.about-info .role {
-  color: var(--txt-secondary);
-  font-size: 13.5px;
-  margin-bottom: 14px;
-}
-
-.about-info .bio {
-  color: var(--txt-secondary);
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.about-info .links {
-  margin-top: 14px;
-  font-size: 13px;
-}
-
-.about-info .links a {
-  color: var(--accent);
-  text-decoration: none;
-  margin-right: 18px;
-  transition: var(--transition);
-}
-
-.about-info .links a:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
-}
-
 /* 经验仓库 */
 .repos-grid {
   display: grid;
@@ -476,11 +423,6 @@
     padding: 100px 0 40px;
     min-height: auto;
   }
-  .about-wrap {
-    grid-template-columns: 1fr;
-    text-align: center;
-    justify-items: center;
-  }
   .consult-card {
     grid-template-columns: 1fr;
     text-align: center;
@@ -525,7 +467,7 @@
     <div class="navbar-links">
       <a href="#lines">课程</a>
       <a href="#news">资讯</a>
-      <a href="#about">关于</a>
+      <a href="#repos">仓库</a>
       <a href="#free" class="btn btn-ghost" style="padding:6px 14px;font-size:13px;margin-left:4px">咨询</a>
     </div>
   </div>
@@ -573,29 +515,7 @@
   <div class="hero-wave"></div>
 </section>
 
-<!-- 关于我 -->
-<section class="wrap" id="about">
-  <div class="sec-head anim-fade">
-    <div class="k">About</div>
-    <h2>关于我</h2>
-    <p>一个在 AI 领域摸爬滚打的产品人，想把学会的东西，用最朴素的方式讲给你听</p>
-  </div>
-  <div class="card about-wrap anim-fade">
-    <img class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230d1430' rx='20'/%3E%3Ctext x='50' y='58' font-size='36' text-anchor='middle' fill='%235b8def' font-weight='800'%3EA%3C/text%3E%3C/svg%3E" alt="Avatar">
-    <div class="about-info">
-      <h3>Keynes Zeng</h3>
-      <div class="role">AI 产品经理 · 课程设计师</div>
-      <div class="bio">
-        曾在医疗 AI 领域做产品，后来一头扎进 AI 教育。相信「会用好 AI 是这代人的基本功，不该被挡在门槛外面」。
-        这里所有课程都是我一个字一个字写的，公益免费，开源共享。
-      </div>
-      <div class="links">
-        <a href="https://github.com/keyneszeng" target="_blank" rel="noopener">GitHub →</a>
-        <a href="https://x.com/keyneszeng" target="_blank" rel="noopener">X (Twitter) →</a>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <!-- 经验仓库 -->
 <section class="wrap" id="repos">
