@@ -449,13 +449,14 @@
 <body>
 
 <!-- 背景层 -->
+<canvas id="particle-canvas"></canvas>
 <div class="bg-grid"></div>
-<div class="bg-glow"></div>
-<div class="bg-orbs">
-  <div class="orb"></div>
-  <div class="orb"></div>
-  <div class="orb"></div>
+<div class="bg-aurora">
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+  <div class="aurora"></div>
 </div>
+<div class="scanlines"></div>
 
 <!-- 导航栏 -->
 <nav class="navbar">
@@ -480,14 +481,12 @@
     <h1 class="title">
       把 <span class="grad">AI</span> 变得<br>像聊天一样简单
     </h1>
-    <p class="sub">
-      不用懂代码，也不用怕赶不上。<br>
-      无论你是陪孩子探索的家长、正为学习发愁的学生，还是想把活儿干得更轻松的职场人——<br>
-      这里都有一门课，像朋友一样手把手带你上手。
+    <p class="sub type-text" style="visibility:hidden">
+      不用懂代码，也不用怕赶不上。无论你是陪孩子探索的家长、正为学习发愁的学生，还是想把活儿干得更轻松的职场人——这里都有一门课，像朋友一样手把手带你上手。
     </p>
 
     <!-- 统计条 -->
-    <div class="stats-bar">
+    <div class="stats-bar tilt-card">
       <div class="stat-item">
         <div class="num"><span class="counter" data-target="5">0</span></div>
         <div class="label">课程体系</div>
@@ -507,9 +506,9 @@
     </div>
 
     <div class="cta">
-      <a class="btn btn-primary" href="#lines">查看课程矩阵</a>
-      <a class="btn btn-secondary" href="news.html">创新资讯</a>
-      <a class="btn btn-ghost" href="#free">公益与咨询</a>
+      <a class="btn btn-primary btn-magnetic" href="#lines">查看课程矩阵</a>
+      <a class="btn btn-secondary btn-magnetic" href="news.html">创新资讯</a>
+      <a class="btn btn-ghost btn-magnetic" href="#free">公益与咨询</a>
     </div>
   </div>
   <div class="hero-wave"></div>
@@ -525,7 +524,7 @@
     <p>一路走来沉淀下来的东西，翻翻看，说不定你也能用上</p>
   </div>
   <div class="repos-grid anim-stagger" id="repos-grid">
-    <div class="repo-item card">
+    <div class="repo-item card tilt-card">
       <div class="top">
         <span class="cn">AI 技能升级课程体系</span>
         <span class="tag">课程</span>
@@ -533,7 +532,7 @@
       <div class="rd">5 条学习线，覆盖儿童到职场人，中英双语，完全免费</div>
       <div class="repo-name"><a href="ai-curriculum.html">查看完整课程矩阵 →</a></div>
     </div>
-    <div class="repo-item card">
+    <div class="repo-item card tilt-card">
       <div class="top">
         <span class="cn">创新资讯精选</span>
         <span class="tag">文章</span>
@@ -541,7 +540,7 @@
       <div class="rd">AI 行业动态、Agent 进展、工具测评，每篇都值得一读</div>
       <div class="repo-name"><a href="news.html">阅读全部 →</a></div>
     </div>
-    <div class="repo-item card">
+    <div class="repo-item card tilt-card">
       <div class="top">
         <span class="cn">DeepSeek Harness 解读</span>
         <span class="tag">深度</span>
@@ -549,7 +548,7 @@
       <div class="rd">卡兹克原文整理版：DeepSeek V4 Pro 后的 Agent 产品「一切皆插件」</div>
       <div class="repo-name"><a href="posts/deepseek-harness-kazix.html">阅读整理版 →</a></div>
     </div>
-    <div class="repo-item card">
+    <div class="repo-item card tilt-card">
       <div class="top">
         <span class="cn">WorkBuddy 上手教程</span>
         <span class="tag">教程</span>
@@ -557,7 +556,7 @@
       <div class="rd">苏乐手把手教你用国产通用 Agent 搞定日常办公</div>
       <div class="repo-name"><a href="posts/workbuddy-suxiaole.html">阅读整理版 →</a></div>
     </div>
-    <div class="repo-item card">
+    <div class="repo-item card tilt-card">
       <div class="top">
         <span class="cn">Codex 入门课件</span>
         <span class="tag">课程</span>
@@ -576,7 +575,7 @@
     <p>下面五门课，不是把同一份内容换个深浅，而是真真正正为不同人、不同事设计的。每一门都配好了中文和英文两版，随你挑。</p>
   </div>
   <div class="lines-grid anim-stagger">
-    <div class="line-item card">
+    <div class="line-item card tilt-card">
       <div class="no">01</div>
       <h3>AI 创造力启蒙营</h3>
       <div class="aud">🎯 儿童 6–12 + 家长</div>
@@ -584,7 +583,7 @@
       <div class="goal">陪孩子把脑子里的小想法，变成故事、画和好玩的小游戏，顺便学会保护自己</div>
       <div class="more"><a href="course-content/儿童创造力启蒙营/">查看课件 →</a></div>
     </div>
-    <div class="line-item card">
+    <div class="line-item card tilt-card">
       <div class="no">02</div>
       <h3>AI 学习力训练营</h3>
       <div class="aud">🎯 中学生（初中 / 高中）</div>
@@ -592,7 +591,7 @@
       <div class="goal">让 AI 当孩子的陪练，而不是替他写作业的"枪手"——学会自己想、自己学</div>
       <div class="more"><a href="course-content/中学生学习力训练营/">查看课件 →</a></div>
     </div>
-    <div class="line-item card">
+    <div class="line-item card tilt-card">
       <div class="no">03</div>
       <h3>AI 项目与职业能力营</h3>
       <div class="aud">🎯 大学生 / 研究生 / 应届</div>
@@ -600,7 +599,7 @@
       <div class="goal">带着你从"查资料"一路做到"拿出作品"，毕业时手里真有东西可以讲</div>
       <div class="more"><a href="course-content/大学生项目职业能力营/">查看课件 →</a></div>
     </div>
-    <div class="line-item card">
+    <div class="line-item card tilt-card">
       <div class="no">04</div>
       <h3>AI 工作提效实战营</h3>
       <div class="aud">🎯 职场人（行政 / 销售 / 客服 / 运营）</div>
@@ -608,7 +607,7 @@
       <div class="goal">把那些重复到犯困的活儿，交给 AI 搭好的小流程，你只管做更值钱的事</div>
       <div class="more"><a href="course-content/职场人工作提效实战营/">查看课件 →</a></div>
     </div>
-    <div class="line-item card">
+    <div class="line-item card tilt-card">
       <div class="no">05</div>
       <h3>AI 产品经理进阶营</h3>
       <div class="aud">🎯 产品经理 / 创业者</div>
@@ -630,7 +629,7 @@
     <p>精选几篇值得读的 AI 文章——模型动态、Agent 进展、行业报告。点「查看全部」进汇集页，所有链接都跳原文。</p>
   </div>
   <div class="news-grid anim-stagger">
-    <article class="post-item card" data-cat="agent">
+    <article class="post-item card tilt-card" data-cat="agent">
       <span class="tag">国产 Agent</span>
       <h3>卡兹克：DeepSeek Harness 深度解读</h3>
       <div class="meta">数字生命卡兹克 @Khazix0918 · 2026-08-14</div>
@@ -641,7 +640,7 @@
         <a href="https://x.com/Khazix0918/status/2088074732730208592" target="_blank" rel="noopener">看原文 ↗</a>
       </div>
     </article>
-    <article class="post-item card" data-cat="agent">
+    <article class="post-item card tilt-card" data-cat="agent">
       <span class="tag">Agent</span>
       <h3>OpenAI 被 Gartner 评为编码智能体领导者</h3>
       <div class="meta">OpenAI · 2026</div>
@@ -650,7 +649,7 @@
         <a href="https://openai.com/index/gartner-2026-agentic-coding-leader/" target="_blank" rel="noopener">阅读原文 →</a>
       </div>
     </article>
-    <article class="post-item card" data-cat="agent">
+    <article class="post-item card tilt-card" data-cat="agent">
       <span class="tag">国产 Agent</span>
       <h3>苏乐：WorkBuddy 国产通用 Agent 实操教程</h3>
       <div class="meta">苏乐 @ai_suxiaole · 2026-07-02</div>

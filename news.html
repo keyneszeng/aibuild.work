@@ -163,13 +163,14 @@
 <body>
 
 <!-- 背景层 -->
+<canvas id="particle-canvas"></canvas>
 <div class="bg-grid"></div>
-<div class="bg-glow"></div>
-<div class="bg-orbs">
-  <div class="orb"></div>
-  <div class="orb"></div>
-  <div class="orb"></div>
+<div class="bg-aurora">
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+  <div class="aurora"></div>
 </div>
+<div class="scanlines"></div>
 
 <!-- 导航栏 -->
 <nav class="navbar">
@@ -208,7 +209,7 @@
   <!-- 文章列表 -->
   <div class="news-list anim-stagger" id="news-list">
 
-    <article class="post-item card" data-cat="model">
+    <article class="post-item card tilt-card" data-cat="model">
       <span class="tag">模型动态</span>
       <h3>Anthropic 发布 Claude Opus 5</h3>
       <div class="meta">Anthropic · 2026-07</div>
@@ -248,7 +249,7 @@
       <div class="read"><a href="https://zhuanlan.zhihu.com/p/1996902325206405568" target="_blank" rel="noopener">阅读原文 →</a></div>
     </article>
 
-    <article class="post-item card" data-cat="model">
+    <article class="post-item card tilt-card" data-cat="model">
       <span class="tag">模型动态</span>
       <h3>Claude 发布新版「宪法」</h3>
       <div class="meta">Anthropic · 2026-01</div>
