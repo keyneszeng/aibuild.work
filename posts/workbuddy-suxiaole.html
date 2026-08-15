@@ -4,144 +4,290 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>苏乐：WorkBuddy 国产通用 Agent 实操教程 · 创新资讯</title>
+<link rel="stylesheet" href="../style.css">
 <style>
-:root{--bg:#070b1a;--bg2:#0d1430;--card:rgba(255,255,255,.035);--line:rgba(120,160,255,.14);
---txt:#e8edff;--sub:#94a3c8;--accent:#5b8def;--accent2:#4ecdc4;
---glow:rgba(91,141,239,.30);--radius:16px}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
-background:var(--bg);color:var(--txt);line-height:1.75;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-.bg-grid{position:fixed;inset:0;z-index:-2;
-background-image:linear-gradient(rgba(91,141,239,.06) 1px,transparent 1px),
-linear-gradient(90deg,rgba(91,141,239,.06) 1px,transparent 1px);
-background-size:48px 48px;
-mask-image:radial-gradient(ellipse 75% 55% at 50% 0%,#000 35%,transparent 100%)}
-.bg-glow{position:fixed;inset:0;z-index:-1;
-background:radial-gradient(55% 38% at 82% 8%,rgba(91,141,239,.16),transparent),
-radial-gradient(45% 35% at 12% 16%,rgba(78,205,196,.12),transparent)}
-.wrap{max-width:780px;margin:0 auto;padding:0 22px}
-.topbar{padding:22px 0;display:flex;align-items:center;justify-content:space-between}
-.topbar a{color:var(--accent);text-decoration:none;font-size:14px;font-weight:600}
-.topbar a:hover{text-decoration:underline}
-.topbar .brand{font-weight:800;font-size:15px;color:var(--txt)}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border:1px solid var(--line);
-border-radius:30px;font-size:13px;color:var(--accent2);background:var(--card);margin:30px 0 18px}
-.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 9px var(--accent2)}
-h1{font-size:clamp(24px,4.4vw,36px);line-height:1.28;font-weight:800;margin-bottom:14px}
-.meta{color:var(--sub);font-size:13.5px;margin-bottom:10px}
-.meta a{color:var(--accent);text-decoration:none}
-.lead{color:var(--sub);font-size:16px;background:var(--card);border:1px solid var(--line);
-border-radius:14px;padding:18px 22px;margin:22px 0 30px}
-h2{font-size:21px;margin:34px 0 12px;color:var(--accent);font-weight:800}
-h3{font-size:16.5px;margin:22px 0 8px;color:var(--txt)}
-p{margin:12px 0;color:var(--txt);opacity:.92}
-ul,ol{margin:12px 0 12px 22px;color:var(--txt);opacity:.92}
-li{margin:7px 0}
-.box{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 22px;margin:20px 0}
-.box .h{color:var(--accent2);font-weight:700;font-size:14px;margin-bottom:8px}
-.tagline{color:var(--sub);font-size:13px;border-left:3px solid var(--accent);padding-left:12px;margin:18px 0}
-.foot{margin-top:40px;padding:20px 22px;border:1px dashed var(--line);border-radius:14px;color:var(--sub);font-size:13px}
-.foot b{color:var(--accent2)}
-footer{text-align:center;padding:40px 0 56px;color:var(--sub);font-size:13px;border-top:1px solid var(--line);margin-top:46px}
-footer a{color:var(--accent);text-decoration:none}
-@media(max-width:680px){.wrap{padding:0 18px}}
+/* ── 文章页专属样式 ── */
+
+.article-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+
+.article-header {
+  padding: 100px 0 10px;
+}
+
+.article-header h1 {
+  font-size: clamp(24px, 4.4vw, 36px);
+  line-height: 1.28;
+  font-weight: 800;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+
+.article-meta {
+  color: var(--txt-tertiary);
+  font-size: 13.5px;
+  margin-bottom: 10px;
+}
+
+.article-meta a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.article-meta a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.article-lead {
+  color: var(--txt-secondary);
+  font-size: 16px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 22px 0 32px;
+  line-height: 1.7;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.article-body h2 {
+  font-size: 22px;
+  margin: 38px 0 14px;
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.article-body h3 {
+  font-size: 17px;
+  margin: 24px 0 8px;
+  color: var(--txt);
+  font-weight: 700;
+}
+
+.article-body p {
+  margin: 14px 0;
+  color: var(--txt);
+  opacity: 0.92;
+  line-height: 1.8;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 12px 0 12px 22px;
+  color: var(--txt);
+  opacity: 0.92;
+}
+
+.article-body li {
+  margin: 8px 0;
+  line-height: 1.7;
+}
+
+.article-body .box {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 22px 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.article-body .box .h {
+  color: var(--accent2);
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.article-body .tagline {
+  color: var(--txt-secondary);
+  font-size: 13.5px;
+  border-left: 3px solid var(--accent);
+  padding-left: 14px;
+  margin: 18px 0;
+  font-style: italic;
+}
+
+.article-body .code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xs);
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--accent2);
+}
+
+.article-foot {
+  margin-top: 44px;
+  padding: 22px 24px;
+  border: 1px dashed var(--card-border);
+  border-radius: var(--radius);
+  color: var(--txt-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.article-foot b {
+  color: var(--accent2);
+  font-weight: 700;
+}
+
+.article-foot a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.article-foot a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .article-header {
+    padding: 80px 0 10px;
+  }
+  .article-wrap {
+    padding: 0 16px;
+  }
+}
 </style>
 </head>
 <body>
+
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
 
-<div class="wrap">
-  <div class="topbar">
-    <a href="../news.html">← 返回创新资讯</a>
-    <span class="brand">🧪 AI 技能升级课程体系</span>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="../" class="navbar-brand">
+      <span class="logo-dot"></span>
+      AIBUILD.WORK
+    </a>
+    <div class="navbar-links">
+      <a href="../news.html" class="nav-keep">← 资讯</a>
+      <a href="../#lines">课程</a>
+      <a href="../#about">关于</a>
+    </div>
   </div>
+</nav>
 
-  <div class="badge"><span class="dot"></span> 创新资讯 · 国产 Agent</div>
-  <h1>苏乐：WorkBuddy 国产通用 Agent 实操教程</h1>
-  <div class="meta">作者：苏乐（@ai_suxiaole，XWise 插件作者） · 发布：2026-07-02 ·
-    <a href="https://x.com/ai_suxiaole/status/2072514519990223112" target="_blank" rel="noopener">查看原文 ↗</a></div>
+<div class="article-wrap">
 
-  <div class="lead">
+  <header class="article-header anim-fade-up">
+    <div class="badge"><span class="dot"></span> 创新资讯 · 国产 Agent</div>
+    <h1>苏乐：WorkBuddy 国产通用 Agent 实操教程</h1>
+    <div class="article-meta">
+      作者：苏乐（@ai_suxiaole，XWise 插件作者） · 发布：2026-07-02 ·
+      <a href="https://x.com/ai_suxiaole/status/2072514519990223112" target="_blank" rel="noopener">查看原文 ↗</a>
+    </div>
+  </header>
+
+  <div class="article-lead anim-fade">
     这是一篇<strong>面向小白</strong>的国产通用 Agent 上手长文。作者认为 Claude Code / Codex 虽强，但海外工具在注册、支付、安装上仍有门槛，很多人「用不上」；而 WorkBuddy 把国内用户最需要的办公自动化拼图补上了——日常七成以上的办公活它都能接。
   </div>
 
-  <div class="box">
-    <div class="h">📌 本文要点速览</div>
+  <div class="article-body anim-fade">
+
+    <div class="box">
+      <div class="h">📌 本文要点速览</div>
+      <ul>
+        <li><b>是什么</b>：WorkBuddy 是腾讯出品的国产通用 Agent 客户端（Mac / Windows），对标 Claude Code / Codex 的「能操作你电脑干活的 AI 同事」。</li>
+        <li><b>最大亮点</b>：原生打通微信远程控制——手机小程序就能让它干活，海外 Agent 普遍做不到。</li>
+        <li><b>作者实话</b>：国产模型写<strong>复杂大工程</strong>仍有差距，小项目 / 小网页 / 小工具没问题；真上大工程仍建议 Claude Code 或 Codex。</li>
+        <li><b>适合谁</b>：不想折腾环境、不想硬啃开发流程，但想把汇报、数据、PPT、代码这些日常活自动化的人。</li>
+      </ul>
+    </div>
+
+    <h2>一、下载与安装</h2>
+    <p>官网直接进 <b>workbuddy.cn</b>，Mac、Windows 两个版本都有，按自己系统下载。安装包下下来双击、一路默认，装完打开客户端即可。</p>
+    <p class="tagline">门槛低是它相对海外工具的核心优势：不用翻墙注册、不用绑境外支付。</p>
+
+    <h2>二、办公场景线：日常七成活它都能接</h2>
+    <p>作者用一条「办公场景」主线串起最常用的四类活：</p>
     <ul>
-      <li><b>是什么</b>：WorkBuddy 是腾讯出品的国产通用 Agent 客户端（Mac / Windows），对标 Claude Code / Codex 的「能操作你电脑干活的 AI 同事」。</li>
-      <li><b>最大亮点</b>：原生打通微信远程控制——手机小程序就能让它干活，海外 Agent 普遍做不到。</li>
-      <li><b>作者实话</b>：国产模型写<strong>复杂大工程</strong>仍有差距，小项目 / 小网页 / 小工具没问题；真上大工程仍建议 Claude Code 或 Codex。</li>
-      <li><b>适合谁</b>：不想折腾环境、不想硬啃开发流程，但想把汇报、数据、PPT、代码这些日常活自动化的人。</li>
+      <li><b>写汇报</b>：把要点 / 素材丢给它，生成结构化汇报草稿。</li>
+      <li><b>理数据</b>：整理一批杂乱数据、归类、出表格。</li>
+      <li><b>出 PPT</b>：从主题到成稿，产出可演示的幻灯片。</li>
+      <li><b>改代码</b>：小脚本、小工具级修改能接住（复杂工程另说）。</li>
     </ul>
-  </div>
+    <p>跟着走一遍流程，就能上手。作者强调：对绝大多数普通人，Agent 最大价值不是帮你写漂亮代码，而是把每天琐碎、重复、让人烦躁的办公任务自动化掉。</p>
 
-  <h2>一、下载与安装</h2>
-  <p>官网直接进 <b>workbuddy.cn</b>，Mac、Windows 两个版本都有，按自己系统下载。安装包下下来双击、一路默认，装完打开客户端即可。</p>
-  <p class="tagline">门槛低是它相对海外工具的核心优势：不用翻墙注册、不用绑境外支付。</p>
+    <h2>三、开发场景线：小项目能跑，大工程另有选择</h2>
+    <p>WorkBuddy 也能做开发类任务——小网页、小工具、小项目没问题。但作者直言：</p>
+    <div class="box">
+      <div class="h">⚠️ 作者的诚实判断</div>
+      <p style="margin:0">国产模型在代码能力上离最顶尖那批（Claude Code / Codex 背后模型）还有差距。小东西够用；真上复杂大工程，依然强烈建议想办法用 Claude Code 或 Codex。「这话搁两年后会不会翻，我不知道，但眼下就是这样。」</p>
+    </div>
 
-  <h2>二、办公场景线：日常七成活它都能接</h2>
-  <p>作者用一条「办公场景」主线串起最常用的四类活：</p>
-  <ul>
-    <li><b>写汇报</b>：把要点 / 素材丢给它，生成结构化汇报草稿。</li>
-    <li><b>理数据</b>：整理一批杂乱数据、归类、出表格。</li>
-    <li><b>出 PPT</b>：从主题到成稿，产出可演示的幻灯片。</li>
-    <li><b>改代码</b>：小脚本、小工具级修改能接住（复杂工程另说）。</li>
-  </ul>
-  <p>跟着走一遍流程，就能上手。作者强调：对绝大多数普通人，Agent 最大价值不是帮你写漂亮代码，而是把每天琐碎、重复、让人烦躁的办公任务自动化掉。</p>
+    <h2>四、自定义 Skill：把常用流程固化下来</h2>
+    <p>可以挂自定义 Skill。作者举例：他挂了一个「服务器管理」Skill，之后只要跟 WorkBuddy 说「用我那个服务器 Skill 把这个网页部署上线」，它就会照办——把重复操作固化成一句话指令。</p>
 
-  <h2>三、开发场景线：小项目能跑，大工程另有选择</h2>
-  <p>WorkBuddy 也能做开发类任务——小网页、小工具、小项目没问题。但作者直言：</p>
-  <div class="box">
-    <div class="h">⚠️ 作者的诚实判断</div>
-    <p style="margin:0">国产模型在代码能力上离最顶尖那批（Claude Code / Codex 背后模型）还有差距。小东西够用；真上复杂大工程，依然强烈建议想办法用 Claude Code 或 Codex。「这话搁两年后会不会翻，我不知道，但眼下就是这样。」</p>
-  </div>
-
-  <h2>四、自定义 Skill：把常用流程固化下来</h2>
-  <p>可以挂自定义 Skill。作者举例：他挂了一个「服务器管理」Skill，之后只要跟 WorkBuddy 说「用我那个服务器 Skill 把这个网页部署上线」，它就会照办——把重复操作固化成一句话指令。</p>
-
-  <h2>五、远程控制：不在电脑前也能让它干活（最大的差异化）</h2>
-  <p>因为是腾讯自家产品，WorkBuddy 的远程控制<strong>原生打通了微信</strong>，这是很多海外 Agent 想做都做不到的一点。</p>
-  <h3>配置步骤</h3>
-  <ol>
-    <li>打开左侧功能区里的「助理」。</li>
-    <li>点「设置」。</li>
-    <li>把里面两个开关打开。</li>
-    <li>掏出手机，微信扫码，进入小程序授权登录。</li>
-    <li>客户端左上角出现「已连接」字样，就 OK。</li>
-  </ol>
-  <h3>手机端两种模式</h3>
-  <ul>
-    <li><b>云端工作</b>：任务在云端沙箱跑，电脑关着都行。</li>
-    <li><b>连接电脑</b>：远程操控你本地这台机器干活，适合需要读本地文件的任务。</li>
-  </ul>
-  <p>真实场景：人在外面被催「把电脑里某份文件发给财务」，以前只能赶回去，现在手机小程序里说一声就完事（前提是提前配好对应连接器；没配也能让文件先进小程序对话框，再手动转发）。</p>
-  <p>除了小程序，微信里还能挂 ClawBot 插件做入口——作者个人体验小程序更稳定顺手，微信插件是备选。飞书、钉钉、QQ 也都能接助理，按页面提示走即可。</p>
-
-  <h2>六、写在最后</h2>
-  <p>作者一贯观点：对普通人，Agent 的价值是把每天琐碎重复的办公任务自动化——发一封邮件、整理一批数据、出一份 PPT、跑一个小站。这些活加起来，才是「AI 真正让生活变轻」的部分。WorkBuddy 现在把这几件事都接住了，而且做得挺体面。</p>
-  <p>写 Claude Code / Codex 教程时，最扎心的评论永远是「好是好，用不了」。这篇，算是把那块缺的拼图补上了。</p>
-
-  <div class="box">
-    <div class="h">🛡️ 阅读时的安全提醒（与课程体系红线一致）</div>
+    <h2>五、远程控制：不在电脑前也能让它干活（最大的差异化）</h2>
+    <p>因为是腾讯自家产品，WorkBuddy 的远程控制<strong>原生打通了微信</strong>，这是很多海外 Agent 想做都做不到的一点。</p>
+    <h3>配置步骤</h3>
+    <ol>
+      <li>打开左侧功能区里的「助理」。</li>
+      <li>点「设置」。</li>
+      <li>把里面两个开关打开。</li>
+      <li>掏出手机，微信扫码，进入小程序授权登录。</li>
+      <li>客户端左上角出现「已连接」字样，就 OK。</li>
+    </ol>
+    <h3>手机端两种模式</h3>
     <ul>
-      <li>让 Agent 碰本地文件 / 发邮件前，确认它只访问你授权的范围；敏感文件先脱敏。</li>
-      <li>涉及公司数据、客户信息、密钥，不要无脑交给任何 AI 工具——人判断、AI 辅助。</li>
-      <li>远程控制（微信 / 小程序）开启后，注意授权范围，避免 Agent 越权操作。</li>
+      <li><b>云端工作</b>：任务在云端沙箱跑，电脑关着都行。</li>
+      <li><b>连接电脑</b>：远程操控你本地这台机器干活，适合需要读本地文件的任务。</li>
     </ul>
+    <p>真实场景：人在外面被催「把电脑里某份文件发给财务」，以前只能赶回去，现在手机小程序里说一声就完事（前提是提前配好对应连接器；没配也能让文件先进小程序对话框，再手动转发）。</p>
+    <p>除了小程序，微信里还能挂 ClawBot 插件做入口——作者个人体验小程序更稳定顺手，微信插件是备选。飞书、钉钉、QQ 也都能接助理，按页面提示走即可。</p>
+
+    <h2>六、写在最后</h2>
+    <p>作者一贯观点：对普通人，Agent 的价值是把每天琐碎重复的办公任务自动化——发一封邮件、整理一批数据、出一份 PPT、跑一个小站。这些活加起来，才是「AI 真正让生活变轻」的部分。WorkBuddy 现在把这几件事都接住了，而且做得挺体面。</p>
+    <p>写 Claude Code / Codex 教程时，最扎心的评论永远是「好是好，用不了」。这篇，算是把那块缺的拼图补上了。</p>
+
+    <div class="box">
+      <div class="h">🛡️ 阅读时的安全提醒（与课程体系红线一致）</div>
+      <ul>
+        <li>让 Agent 碰本地文件 / 发邮件前，确认它只访问你授权的范围；敏感文件先脱敏。</li>
+        <li>涉及公司数据、客户信息、密钥，不要无脑交给任何 AI 工具——人判断、AI 辅助。</li>
+        <li>远程控制（微信 / 小程序）开启后，注意授权范围，避免 Agent 越权操作。</li>
+      </ul>
+    </div>
+
   </div>
 
-  <div class="foot">
-    📌 本文由《AI 技能升级课程体系》根据苏乐 @ai_suxiaole 原帖（2026-07-02）<b>重新整理</b>，保留原意、补充结构化要点与安全提示，非逐字转载。
-    原帖：<a href="https://x.com/ai_suxiaole/status/2072514519990223112" target="_blank" rel="noopener">x.com/ai_suxiaole/status/2072514519990223112</a>
-    <br>📚 对应课程：<a href="../course-content/职场人工作提效实战营/" style="color:var(--accent2)">职场人线 · 第 13 课《国产 Agent 平替 WorkBuddy》</a>（站内可直接阅读）
+  <div class="article-foot anim-fade">
+    📌 本文由《AI 技能升级课程体系》根据苏乐 @ai_suxiaole 原帖（2026-07-02）<b>重新整理</b>，保留原意、补充结构化要点与安全提示，非逐字转载。<br>
+    原帖：<a href="https://x.com/ai_suxiaole/status/2072514519990223112" target="_blank" rel="noopener">x.com/ai_suxiaole/status/2072514519990223112</a><br>
+    📚 对应课程：<a href="../course-content/职场人工作提效实战营/" style="color:var(--accent2)">职场人线 · 第 13 课《国产 Agent 平替 WorkBuddy》</a>（站内可直接阅读）
   </div>
+
 </div>
 
-<footer class="wrap">
-  <p>创新资讯 · 公益免费、开源共享</p>
-  <p style="margin-top:6px;opacity:.7">开源仓库：<a href="https://github.com/keyneszeng/aibuild.work" target="_blank">github.com/keyneszeng/aibuild.work</a> · 更新于 2026-08-11</p>
+<footer>
+  <div class="wrap">
+    <p>创新资讯 · 公益免费、开源共享</p>
+    <p style="margin-top:6px;opacity:0.6">
+      开源仓库：<a href="https://github.com/keyneszeng/aibuild.work" target="_blank">github.com/keyneszeng/aibuild.work</a>
+      · 更新于 2026-08-11
+    </p>
+  </div>
 </footer>
+
+<script src="../script.js"></script>
 </body>
 </html>

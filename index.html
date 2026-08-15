@@ -4,240 +4,758 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI 技能升级课程体系 · 公益免费</title>
+<link rel="stylesheet" href="style.css">
 <style>
-:root{--bg:#070b1a;--bg2:#0d1430;--card:rgba(255,255,255,.035);--line:rgba(120,160,255,.14);
---txt:#e8edff;--sub:#94a3c8;--accent:#5b8def;--accent2:#4ecdc4;
---glow:rgba(91,141,239,.30);--radius:16px}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
-background:var(--bg);color:var(--txt);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-.bg-grid{position:fixed;inset:0;z-index:-2;
-background-image:linear-gradient(rgba(91,141,239,.06) 1px,transparent 1px),
-linear-gradient(90deg,rgba(91,141,239,.06) 1px,transparent 1px);
-background-size:48px 48px;
-mask-image:radial-gradient(ellipse 75% 55% at 50% 0%,#000 35%,transparent 100%)}
-.bg-glow{position:fixed;inset:0;z-index:-1;
-background:radial-gradient(55% 38% at 82% 8%,rgba(91,141,239,.16),transparent),
-radial-gradient(45% 35% at 12% 16%,rgba(78,205,196,.12),transparent)}
-.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
-
-/* 统一卡片 */
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);transition:.22s}
-.card:hover{border-color:var(--accent);transform:translateY(-3px)}
+/* ── 主页专属样式 ── */
 
 /* HERO */
-.hero{padding:90px 0 60px;text-align:center}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 15px;border:1px solid var(--line);
-border-radius:30px;font-size:13px;color:var(--accent2);background:var(--card);margin-bottom:28px}
-.badge .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 9px var(--accent2)}
-h1.title{font-size:clamp(30px,5.6vw,52px);font-weight:800;letter-spacing:-1px;line-height:1.18}
-.grad{background:linear-gradient(100deg,#5b8def,#4ecdc4 55%,#8aa6ff);
--webkit-background-clip:text;background-clip:text;color:transparent}
-.sub{color:var(--sub);font-size:clamp(15px,2.2vw,17px);margin:20px auto 0;max-width:640px}
-.cta{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.btn{padding:13px 27px;border-radius:11px;font-weight:700;font-size:15px;cursor:pointer;border:none;
-text-decoration:none;transition:.2s;display:inline-block}
-.btn-p{background:linear-gradient(100deg,#5b8def,#4ecdc4);color:#070b1a;box-shadow:0 8px 26px var(--glow)}
-.btn-p:hover{transform:translateY(-2px)}
-.btn-s{background:var(--card);border:1px solid var(--line);color:var(--txt)}
-.btn-s:hover{border-color:var(--accent)}
+.hero {
+  padding: 120px 0 60px;
+  text-align: center;
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-/* 区块 */
-section{padding:74px 0}
-.sec-head{text-align:center;margin-bottom:44px}
-.sec-head .k{font-size:12px;letter-spacing:3px;color:var(--accent);text-transform:uppercase}
-.sec-head h2{font-size:clamp(23px,3.6vw,32px);margin-top:9px;font-weight:800}
-.sec-head p{color:var(--sub);margin-top:11px;max-width:600px;margin-inline:auto;font-size:14.5px}
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero h1.title {
+  font-size: clamp(32px, 5.6vw, 56px);
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.12;
+  margin-top: 20px;
+}
+
+.hero .sub {
+  color: var(--txt-secondary);
+  font-size: clamp(15px, 2.2vw, 18px);
+  margin: 18px auto 0;
+  max-width: 640px;
+  line-height: 1.7;
+}
+
+.hero .cta {
+  margin-top: 36px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Hero 底部装饰 */
+.hero-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, var(--bg), transparent);
+  pointer-events: none;
+}
+
+/* 统计条 */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 20px;
+  max-width: 700px;
+  margin: 40px auto 0;
+  padding: 24px 28px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-item .num {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  line-height: 1.1;
+}
+
+.stat-item .num .counter {
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stat-item .label {
+  font-size: 12px;
+  color: var(--txt-tertiary);
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+}
 
 /* 关于我 */
-.about{display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;padding:28px}
-.avatar{width:88px;height:88px;border-radius:20px;object-fit:cover;border:1px solid var(--accent)}
-.about h3{font-size:21px;margin-bottom:5px}
-.about .role{color:var(--sub);font-size:13.5px;margin-bottom:16px}
-.stats{display:flex;gap:26px;flex-wrap:wrap}
-.stat .n{font-size:23px;font-weight:800;color:var(--accent2);line-height:1.1}
-.stat .l{font-size:12px;color:var(--sub)}
-.about .links{margin-top:16px;font-size:13px}
-.about .links a{color:var(--accent);text-decoration:none;margin-right:16px}
-.about .links a:hover{text-decoration:underline}
+.about-wrap {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 28px;
+  align-items: center;
+  padding: 32px;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 22px;
+  object-fit: cover;
+  border: 2px solid var(--card-border-hover);
+  box-shadow: 0 0 30px var(--glow);
+}
+
+.about-info h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.about-info .role {
+  color: var(--txt-secondary);
+  font-size: 13.5px;
+  margin-bottom: 14px;
+}
+
+.about-info .bio {
+  color: var(--txt-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.about-info .links {
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.about-info .links a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-right: 18px;
+  transition: var(--transition);
+}
+
+.about-info .links a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
 
 /* 经验仓库 */
-.repos{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-.repo{padding:18px 20px}
-.repo .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
-.repo .cn{font-weight:700;font-size:15.5px;color:var(--txt)}
-.repo .tag{font-size:11px;color:var(--accent2);border:1px solid var(--line);padding:2px 9px;border-radius:20px;white-space:nowrap}
-.repo .rd{font-size:13px;color:var(--sub)}
-.repo .repo-name{margin-top:9px;font-size:12px;color:var(--sub)}
-.repo .repo-name a{color:var(--sub);text-decoration:none}
-.repo .repo-name a:hover{color:var(--accent)}
-.more-line{text-align:center;margin-top:22px;color:var(--sub);font-size:13px}
-.more-line a{color:var(--accent);text-decoration:none}
-.more-line a:hover{text-decoration:underline}
+.repos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.repo-item {
+  padding: 20px 22px;
+}
+
+.repo-item .top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.repo-item .cn {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--txt);
+}
+
+.repo-item .tag {
+  font-size: 10.5px;
+  color: var(--accent2);
+  border: 1px solid var(--card-border);
+  padding: 2px 9px;
+  border-radius: 20px;
+  white-space: nowrap;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.repo-item .rd {
+  font-size: 13px;
+  color: var(--txt-secondary);
+  line-height: 1.5;
+}
+
+.repo-item .repo-name {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--txt-tertiary);
+}
+
+.repo-item .repo-name a {
+  color: var(--txt-tertiary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.repo-item .repo-name a:hover {
+  color: var(--accent);
+}
+
+.more-line {
+  text-align: center;
+  margin-top: 24px;
+  color: var(--txt-secondary);
+  font-size: 13px;
+}
+
+.more-line a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.more-line a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
 
 /* 课程矩阵 */
-.lines{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
-.line{padding:24px}
-.line .no{width:46px;height:46px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-font-size:18px;font-weight:800;color:var(--accent);background:rgba(91,141,239,.14);border:1px solid var(--line)}
-.line h3{font-size:18px;margin:13px 0 4px}
-.line .aud{color:var(--accent);font-size:13px;font-weight:600}
-.line .ls{color:var(--sub);font-size:13px;margin:10px 0}
-.line .goal{font-size:13.5px;color:var(--txt);opacity:.88}
-.line .more{margin-top:14px}
-.line .more a{color:var(--accent);text-decoration:none;font-size:13px;font-weight:600}
-.line .more a:hover{text-decoration:underline}
+.lines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 16px;
+}
+
+.line-item {
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.line-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.line-item:hover::before {
+  opacity: 1;
+}
+
+.line-item .no {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent);
+  background: rgba(91, 141, 239, 0.1);
+  border: 1px solid var(--card-border);
+  margin-bottom: 14px;
+  transition: var(--transition);
+}
+
+.line-item:hover .no {
+  background: rgba(91, 141, 239, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--glow);
+}
+
+.line-item h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.line-item .aud {
+  color: var(--accent2);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.line-item .ls {
+  color: var(--txt-secondary);
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.line-item .goal {
+  font-size: 13.5px;
+  color: var(--txt);
+  opacity: 0.85;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.line-item .more {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--card-border);
+}
+
+.line-item .more a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+
+.line-item .more a:hover {
+  color: var(--accent-hover);
+  gap: 10px;
+}
 
 /* 创新资讯 */
-.news{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px;margin-top:8px}
-.post{padding:22px;display:flex;flex-direction:column}
-.post .tag{font-size:11px;color:var(--accent2);border:1px solid var(--line);padding:2px 10px;border-radius:20px;align-self:flex-start;margin-bottom:13px}
-.post h3{font-size:17px;line-height:1.4;margin-bottom:9px}
-.post .meta{font-size:12px;color:var(--sub);margin-bottom:11px}
-.post .ex{font-size:13.5px;color:var(--sub);flex:1}
-.post .read{margin-top:15px;font-size:13px;font-weight:600}
-.post .read a{color:var(--accent);text-decoration:none}
-.post .read a:hover{text-decoration:underline}
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 16px;
+}
+
+.post-item {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.post-item .tag {
+  font-size: 11px;
+  color: var(--accent2);
+  border: 1px solid var(--card-border);
+  padding: 3px 10px;
+  border-radius: 20px;
+  align-self: flex-start;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.post-item h3 {
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.post-item .meta {
+  font-size: 12px;
+  color: var(--txt-tertiary);
+  margin-bottom: 10px;
+}
+
+.post-item .ex {
+  font-size: 13.5px;
+  color: var(--txt-secondary);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.post-item .read {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--card-border);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.post-item .read a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.post-item .read a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
 
 /* 公益 + 咨询 */
-.free{padding:40px;text-align:center;
-background:linear-gradient(120deg,rgba(78,205,196,.09),rgba(91,141,239,.09))}
-.free h2{font-size:clamp(21px,3.6vw,28px);font-weight:800}
-.free p{color:var(--sub);max-width:620px;margin:13px auto 0;font-size:14.5px}
-.consult{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center;margin-top:30px;padding:24px;text-align:left}
-.qr{width:140px;height:140px;border-radius:12px;background:#fff;padding:9px}
-.consult .ct h3{font-size:17px;margin-bottom:8px}
-.consult .ct .price{font-size:25px;font-weight:800;color:var(--accent2)}
-.consult .ct .pr{color:var(--sub);font-size:13px;margin-top:6px}
-.consult .ct .wx{margin-top:11px;font-size:13px;color:var(--txt)}
-.consult .ct .wx b{color:var(--accent)}
+.free-section {
+  padding: 48px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(78, 205, 196, 0.06), rgba(91, 141, 239, 0.06));
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+}
 
-footer{text-align:center;padding:40px 0 56px;color:var(--sub);font-size:13px;border-top:1px solid var(--line);margin-top:30px}
-footer a{color:var(--accent);text-decoration:none}
+.free-section h2 {
+  font-size: clamp(22px, 3.6vw, 30px);
+  font-weight: 800;
+  line-height: 1.3;
+}
 
-@media(max-width:680px){
-.about{grid-template-columns:1fr;text-align:center;justify-items:center}
-.consult{grid-template-columns:1fr;text-align:center;justify-items:center}
-.hero{padding:64px 0 44px}
-section{padding:58px 0}
+.free-section > p {
+  color: var(--txt-secondary);
+  max-width: 620px;
+  margin: 14px auto 0;
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+.consult-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: center;
+  margin-top: 32px;
+  padding: 28px;
+  text-align: left;
+}
+
+.qr-img {
+  width: 140px;
+  height: 140px;
+  border-radius: 14px;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.consult-info h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.consult-info .price {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent2);
+  margin-bottom: 6px;
+}
+
+.consult-info .pr {
+  color: var(--txt-secondary);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.consult-info .wx {
+  margin-top: 12px;
+  font-size: 13.5px;
+  color: var(--txt);
+}
+
+.consult-info .wx b {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .hero {
+    padding: 100px 0 40px;
+    min-height: auto;
+  }
+  .about-wrap {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+  .consult-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+  .stats-bar {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 18px;
+  }
+  .free-section {
+    padding: 32px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .lines-grid,
+  .news-grid,
+  .repos-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 <body>
+
+<!-- 背景层 -->
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
+<div class="bg-orbs">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
 
-<header class="hero wrap">
-  <div class="badge"><span class="dot"></span> 公益免费 · 开源课程 · 陪你一起学 AI</div>
-  <h1 class="title">把 <span class="grad">AI</span> 变得<br>像聊天一样简单</h1>
-  <p class="sub">不用懂代码，也不用怕赶不上。<br>无论你是陪孩子探索的家长、正为学习发愁的学生，还是想把活儿干得更轻松的职场人——这里都有一门课，像朋友一样手把手带你上手。</p>
-  <div class="cta">
-    <a class="btn btn-p" href="#lines">查看课程矩阵</a>
-    <a class="btn btn-s" href="news.html">创新资讯</a>
-    <a class="btn btn-s" href="#free">公益与咨询</a>
+<!-- 导航栏 -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-brand">
+      <span class="logo-dot"></span>
+      AIBUILD.WORK
+    </a>
+    <div class="navbar-links">
+      <a href="#lines">课程</a>
+      <a href="#news">资讯</a>
+      <a href="#about">关于</a>
+      <a href="#free" class="btn btn-ghost" style="padding:6px 14px;font-size:13px;margin-left:4px">咨询</a>
+    </div>
   </div>
-</header>
+</nav>
 
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-content wrap anim-fade-up">
+    <div class="badge"><span class="dot"></span> 公益免费 · 开源课程 · 陪你一起学 AI</div>
+    <h1 class="title">
+      把 <span class="grad">AI</span> 变得<br>像聊天一样简单
+    </h1>
+    <p class="sub">
+      不用懂代码，也不用怕赶不上。<br>
+      无论你是陪孩子探索的家长、正为学习发愁的学生，还是想把活儿干得更轻松的职场人——<br>
+      这里都有一门课，像朋友一样手把手带你上手。
+    </p>
 
+    <!-- 统计条 -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <div class="num"><span class="counter" data-target="5">0</span></div>
+        <div class="label">课程体系</div>
+      </div>
+      <div class="stat-item">
+        <div class="num"><span class="counter" data-target="44">0</span>+</div>
+        <div class="label">课时</div>
+      </div>
+      <div class="stat-item">
+        <div class="num"><span class="counter" data-target="2">0</span></div>
+        <div class="label">语言版本</div>
+      </div>
+      <div class="stat-item">
+        <div class="num"><span class="counter" data-target="100">0</span>%</div>
+        <div class="label">公益免费</div>
+      </div>
+    </div>
 
+    <div class="cta">
+      <a class="btn btn-primary" href="#lines">查看课程矩阵</a>
+      <a class="btn btn-secondary" href="news.html">创新资讯</a>
+      <a class="btn btn-ghost" href="#free">公益与咨询</a>
+    </div>
+  </div>
+  <div class="hero-wave"></div>
+</section>
 
+<!-- 关于我 -->
+<section class="wrap" id="about">
+  <div class="sec-head anim-fade">
+    <div class="k">About</div>
+    <h2>关于我</h2>
+    <p>一个在 AI 领域摸爬滚打的产品人，想把学会的东西，用最朴素的方式讲给你听</p>
+  </div>
+  <div class="card about-wrap anim-fade">
+    <img class="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230d1430' rx='20'/%3E%3Ctext x='50' y='58' font-size='36' text-anchor='middle' fill='%235b8def' font-weight='800'%3EA%3C/text%3E%3C/svg%3E" alt="Avatar">
+    <div class="about-info">
+      <h3>Keynes Zeng</h3>
+      <div class="role">AI 产品经理 · 课程设计师</div>
+      <div class="bio">
+        曾在医疗 AI 领域做产品，后来一头扎进 AI 教育。相信「会用好 AI 是这代人的基本功，不该被挡在门槛外面」。
+        这里所有课程都是我一个字一个字写的，公益免费，开源共享。
+      </div>
+      <div class="links">
+        <a href="https://github.com/keyneszeng" target="_blank" rel="noopener">GitHub →</a>
+        <a href="https://x.com/keyneszeng" target="_blank" rel="noopener">X (Twitter) →</a>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- 经验仓库 -->
+<section class="wrap" id="repos">
+  <div class="sec-head anim-fade">
+    <div class="k">Knowledge Base</div>
+    <h2>经验仓库</h2>
+    <p>一路走来沉淀下来的东西，翻翻看，说不定你也能用上</p>
+  </div>
+  <div class="repos-grid anim-stagger" id="repos-grid">
+    <div class="repo-item card">
+      <div class="top">
+        <span class="cn">AI 技能升级课程体系</span>
+        <span class="tag">课程</span>
+      </div>
+      <div class="rd">5 条学习线，覆盖儿童到职场人，中英双语，完全免费</div>
+      <div class="repo-name"><a href="ai-curriculum.html">查看完整课程矩阵 →</a></div>
+    </div>
+    <div class="repo-item card">
+      <div class="top">
+        <span class="cn">创新资讯精选</span>
+        <span class="tag">文章</span>
+      </div>
+      <div class="rd">AI 行业动态、Agent 进展、工具测评，每篇都值得一读</div>
+      <div class="repo-name"><a href="news.html">阅读全部 →</a></div>
+    </div>
+    <div class="repo-item card">
+      <div class="top">
+        <span class="cn">DeepSeek Harness 解读</span>
+        <span class="tag">深度</span>
+      </div>
+      <div class="rd">卡兹克原文整理版：DeepSeek V4 Pro 后的 Agent 产品「一切皆插件」</div>
+      <div class="repo-name"><a href="posts/deepseek-harness-kazix.html">阅读整理版 →</a></div>
+    </div>
+    <div class="repo-item card">
+      <div class="top">
+        <span class="cn">WorkBuddy 上手教程</span>
+        <span class="tag">教程</span>
+      </div>
+      <div class="rd">苏乐手把手教你用国产通用 Agent 搞定日常办公</div>
+      <div class="repo-name"><a href="posts/workbuddy-suxiaole.html">阅读整理版 →</a></div>
+    </div>
+    <div class="repo-item card">
+      <div class="top">
+        <span class="cn">Codex 入门课件</span>
+        <span class="tag">课程</span>
+      </div>
+      <div class="rd">基于《Codex 橙皮书》本地化重组，适合职场人和产品经理</div>
+      <div class="repo-name"><a href="course-content/">查看课件 →</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- 课程矩阵 -->
 <section class="wrap" id="lines">
-  <div class="sec-head">
+  <div class="sec-head anim-fade">
     <div class="k">Curriculum</div>
     <h2>总有一门，适合现在的你</h2>
     <p>下面五门课，不是把同一份内容换个深浅，而是真真正正为不同人、不同事设计的。每一门都配好了中文和英文两版，随你挑。</p>
   </div>
-  <div class="lines">
-    <div class="line card">
+  <div class="lines-grid anim-stagger">
+    <div class="line-item card">
       <div class="no">01</div>
       <h3>AI 创造力启蒙营</h3>
-      <div class="aud">儿童 6–12 + 家长</div>
+      <div class="aud">🎯 儿童 6–12 + 家长</div>
       <div class="ls">📦 8 节 + 家长指南 + 安全手册</div>
       <div class="goal">陪孩子把脑子里的小想法，变成故事、画和好玩的小游戏，顺便学会保护自己</div>
       <div class="more"><a href="course-content/儿童创造力启蒙营/">查看课件 →</a></div>
     </div>
-    <div class="line card">
+    <div class="line-item card">
       <div class="no">02</div>
       <h3>AI 学习力训练营</h3>
-      <div class="aud">中学生（初中 / 高中）</div>
+      <div class="aud">🎯 中学生（初中 / 高中）</div>
       <div class="ls">📦 8 节 + Prompt 库 + 学术诚信</div>
       <div class="goal">让 AI 当孩子的陪练，而不是替他写作业的"枪手"——学会自己想、自己学</div>
       <div class="more"><a href="course-content/中学生学习力训练营/">查看课件 →</a></div>
     </div>
-    <div class="line card">
+    <div class="line-item card">
       <div class="no">03</div>
       <h3>AI 项目与职业能力营</h3>
-      <div class="aud">大学生 / 研究生 / 应届</div>
+      <div class="aud">🎯 大学生 / 研究生 / 应届</div>
       <div class="ls">📦 8–10 节 + 毕业项目 + 作品集</div>
       <div class="goal">带着你从"查资料"一路做到"拿出作品"，毕业时手里真有东西可以讲</div>
       <div class="more"><a href="course-content/大学生项目职业能力营/">查看课件 →</a></div>
     </div>
-    <div class="line card">
+    <div class="line-item card">
       <div class="no">04</div>
       <h3>AI 工作提效实战营</h3>
-      <div class="aud">职场人（行政 / 销售 / 客服 / 运营）</div>
+      <div class="aud">🎯 职场人（行政 / 销售 / 客服 / 运营）</div>
       <div class="ls">📦 8 节 + 6 大岗位包</div>
       <div class="goal">把那些重复到犯困的活儿，交给 AI 搭好的小流程，你只管做更值钱的事</div>
       <div class="more"><a href="course-content/职场人工作提效实战营/">查看课件 →</a></div>
     </div>
-    <div class="line card">
+    <div class="line-item card">
       <div class="no">05</div>
       <h3>AI 产品经理进阶营</h3>
-      <div class="aud">产品经理 / 创业者</div>
+      <div class="aud">🎯 产品经理 / 创业者</div>
       <div class="ls">📦 10 节 + PRD / Agent 模板 + 5 案例</div>
       <div class="goal">不止会用一个工具，而是能自己琢磨出"该做个什么 AI 产品"——像产品经理那样想问题</div>
       <div class="more"><a href="course-content/产品经理进阶营/">查看课件 →</a></div>
     </div>
   </div>
-  <p style="text-align:center;margin-top:30px">
-    <a class="btn btn-s" href="ai-curriculum.html">打开课程矩阵（中英双语课件）</a>
+  <p style="text-align:center;margin-top:30px" class="anim-fade">
+    <a class="btn btn-secondary" href="ai-curriculum.html">打开课程矩阵（中英双语课件）</a>
   </p>
 </section>
 
+<!-- 创新资讯 -->
 <section class="wrap" id="news">
-  <div class="sec-head">
+  <div class="sec-head anim-fade">
     <div class="k">Innovation Feed</div>
     <h2>创新资讯 · 最近在聊的 AI</h2>
     <p>精选几篇值得读的 AI 文章——模型动态、Agent 进展、行业报告。点「查看全部」进汇集页，所有链接都跳原文。</p>
   </div>
-  <div class="news">
-    <article class="post card" data-cat="agent">
+  <div class="news-grid anim-stagger">
+    <article class="post-item card" data-cat="agent">
       <span class="tag">国产 Agent</span>
       <h3>卡兹克：DeepSeek Harness 深度解读</h3>
       <div class="meta">数字生命卡兹克 @Khazix0918 · 2026-08-14</div>
       <p class="ex">DeepSeek V4 Pro 后推出自家 Agent 产品「一切皆插件」：Cordis 内核 + 四种模式（标准/PTC/极简/创造），Agent 能现场造插件改造自己。作者判语：概念牛但对普通用户不友好。</p>
-      <div class="read"><a href="posts/deepseek-harness-kazix.html">阅读整理版 →</a> &nbsp; <a href="https://x.com/Khazix0918/status/2088074732730208592" target="_blank" rel="noopener">看原文 ↗</a></div>
+      <div class="read">
+        <a href="posts/deepseek-harness-kazix.html">阅读整理版 →</a>
+        <span style="color:var(--txt-tertiary);margin:0 6px">·</span>
+        <a href="https://x.com/Khazix0918/status/2088074732730208592" target="_blank" rel="noopener">看原文 ↗</a>
+      </div>
     </article>
-    <article class="post card" data-cat="agent">
+    <article class="post-item card" data-cat="agent">
       <span class="tag">Agent</span>
       <h3>OpenAI 被 Gartner 评为编码智能体领导者</h3>
       <div class="meta">OpenAI · 2026</div>
       <p class="ex">Gartner 企业级编码智能体魔力象限中，OpenAI（Codex）获评领导者，文章梳理其企业研发场景能力定位。</p>
-      <div class="read"><a href="https://openai.com/index/gartner-2026-agentic-coding-leader/" target="_blank" rel="noopener">阅读原文 →</a></div>
+      <div class="read">
+        <a href="https://openai.com/index/gartner-2026-agentic-coding-leader/" target="_blank" rel="noopener">阅读原文 →</a>
+      </div>
     </article>
-    <article class="post card" data-cat="agent">
+    <article class="post-item card" data-cat="agent">
       <span class="tag">国产 Agent</span>
       <h3>苏乐：WorkBuddy 国产通用 Agent 实操教程</h3>
       <div class="meta">苏乐 @ai_suxiaole · 2026-07-02</div>
       <p class="ex">面向小白的国产 Agent 上手长文：安装→办公（汇报/数据/PPT/代码）→开发→自定义 Skill→微信远程控制。日常七成办公活它能接。</p>
-      <div class="read"><a href="posts/workbuddy-suxiaole.html">阅读整理版 →</a> &nbsp; <a href="https://x.com/ai_suxiaole/status/2072514519990223112" target="_blank" rel="noopener">看原文 ↗</a></div>
+      <div class="read">
+        <a href="posts/workbuddy-suxiaole.html">阅读整理版 →</a>
+        <span style="color:var(--txt-tertiary);margin:0 6px">·</span>
+        <a href="https://x.com/ai_suxiaole/status/2072514519990223112" target="_blank" rel="noopener">看原文 ↗</a>
+      </div>
     </article>
   </div>
-  <p style="text-align:center;margin-top:28px">
-    <a class="btn btn-s" href="news.html">查看全部创新资讯 →</a>
+  <p style="text-align:center;margin-top:28px" class="anim-fade">
+    <a class="btn btn-secondary" href="news.html">查看全部创新资讯 →</a>
   </p>
 </section>
 
+<!-- 公益与咨询 -->
 <section class="wrap" id="free">
-  <div class="free card">
+  <div class="free-section anim-fade">
     <h2>🌱 这些课，<span class="grad">全部免费送给你</span></h2>
-    <p>课件、规划、配套网页，全都 openly 放在网上，谁都能学、能转、能拿去上课。
+    <p>课件、规划、配套网页，全都 openly 放在网上，谁都能学、能转、能拿去上课。<br>
     会用好 AI，是这代人的基本功，不该被挡在门槛外面。</p>
-    <div class="consult card">
-      <img class="qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVwAAAFcAQAAAACsbTuBAAABvElEQVR4nO1bQWrEMAy0RO/OD/r/Z/UH9gtUZDmOsqHgdhuvs5lhCUEZgpgMsiWzJKEbmfu5IYDsATU8oIYH1PCAGh5QwwNqvIka1LDo/TE4Jo0+cCevAOSn1YhiCCFICsfg39/cBZCnVoPW+kCfshaKLTgsjQ6APEaNj2NItF2lENPANBjka6iRaVtWXpjGjwB5dN2Q9abuRPfBk9NgkOf1RnaOiImi0EPw3DQY5Gm9IS4kqyVk0pwZ5KHzjUV/1phYG6tbjmKS9ggf5Z4WlS8KWdvVugvN1Iyhj0al0Qfu5BWA/B89bFRbqA+iLiYUJUQhbWbL3uPXb2aQL65GqKNPG36WQWhdU0RsZdFKYgPSNEnODPLYPmWxzSfFZFtQ2peRk9NgkGeuGw01WEqH3aNuTPwF+Wwy7Y9c9Rplu45Kow/cySsA+ek1JdYpOel8Q91gi4tkauMO6HzbPoWcQx6nYaenwSBf4hw2bE2rGkab2dPTYJAv4Q2KydYR84Te13oySc4M8qvOYSWTWK0oGw/0sHe3aK5tSm1Syvy8AecptyQT/rs030dhkB2ghgfU8IAaHlDDA2p4TKLGN5eVotfZ44QgAAAAAElFTkSuQmCC" alt="微信二维码">
-      <div class="ct">
+    <div class="consult-card card">
+      <img class="qr-img" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVwAAAFcAQAAAACsbTuBAAABvElEQVR4nO1bQWrEMAy0RO/OD/r/Z/UH9gtUZDmOsqHgdhuvs5lhCUEZgpgMsiWzJKEbmfu5IYDsATU8oIYH1PCAGh5QwwNqvIka1LDo/TE4Jo0+cCevAOSn1YhiCCFICsfg39/cBZCnVoPW+kCfshaKLTgsjQ6APEaNj2NItF2lENPANBjka6iRaVtWXpjGjwB5dN2Q9abuRPfBk9NgkOf1RnaOiImi0EPw3DQY5Gm9IS4kqyVk0pwZ5KHzjUV/1phYG6tbjmKS9ggf5Z4WlS8KWdvVugvN1Iyhj0al0Qfu5BWA/B89bFRbqA+iLiYUJUQhbWbL3uPXb2aQL65GqKNPG36WQWhdU0RsZdFKYgPSNEnODPLYPmWxzSfFZFtQ2peRk9NgkGeuGw01WEqH3aNuTPwF+Wwy7Y9c9Rplu45Kow/cySsA+ek1JdYpOel8Q91gi4tkauMO6HzbPoWcQx6nYaenwSBf4hw2bE2rGkab2dPTYJAv4Q2KydYR84Te13oySc4M8qvOYSWTWK0oGw/0sHe3aK5tSm1Syvy8AecptyQT/rs030dhkB2ghgfU8IAaHlDDA2p4TKLGN5eVotfZ44QgAAAAAElFTkSuQmCC" alt="微信二维码">
+      <div class="consult-info">
         <h3>想更进一步地聊聊？</h3>
         <div class="price">有偿咨询 ¥800 / 次</div>
         <div class="pr">企业内训、定制课程、医疗 AI 产品、或者你个人的学习路线——都可以跟我聊</div>
@@ -247,9 +765,17 @@ section{padding:58px 0}
   </div>
 </section>
 
-<footer class="wrap">
-  <p>这套课，公益免费、开源共享，欢迎你学走、也分享给身边人</p>
-  <p style="margin-top:6px;opacity:.7">开源仓库：<a href="https://github.com/keyneszeng/aibuild.work" target="_blank">github.com/keyneszeng/aibuild.work</a> · 本页课件均可在站内直接阅读 · 更新于 2026-08-11</p>
+<footer>
+  <div class="wrap">
+    <p>这套课，公益免费、开源共享，欢迎你学走、也分享给身边人</p>
+    <p style="margin-top:8px;opacity:0.6">
+      开源仓库：<a href="https://github.com/keyneszeng/aibuild.work" target="_blank">github.com/keyneszeng/aibuild.work</a>
+      · 本页课件均可在站内直接阅读
+      · 更新于 2026-08-11
+    </p>
+  </div>
 </footer>
+
+<script src="script.js"></script>
 </body>
 </html>
