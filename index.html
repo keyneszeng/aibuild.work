@@ -509,7 +509,7 @@
       const count = document.querySelector('#result-count');
       const hint = document.querySelector('#search-hint');
       const empty = document.querySelector('#empty-card');
-      const cards = [...document.querySelectorAll('.content-card')]
+      let cards = [...document.querySelectorAll('.content-card')]
         .sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
       cards.forEach(card => track.insertBefore(card, empty));
       const prev = document.querySelector('#slide-prev');
@@ -517,6 +517,47 @@
       let autoTimer;
 
       const normalize = value => value.trim().toLocaleLowerCase('zh-CN');
+
+      async function loadLatestArticles() {
+        try {
+          const response = await fetch('news.html', { cache: 'no-cache' });
+          if (!response.ok) return;
+          const documentText = await response.text();
+          const source = new DOMParser().parseFromString(documentText, 'text/html');
+          const articles = [...source.querySelectorAll('.post-item[data-date]')]
+            .sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date))
+            .slice(0, 10);
+          if (!articles.length) return;
+
+          const freshCards = articles.map(article => {
+            const link = article.querySelector('.read a');
+            const card = document.createElement('a');
+            const date = article.dataset.date;
+            const dateLabel = date.slice(5).replace('-', '.');
+            card.className = 'content-card';
+            card.href = link ? link.getAttribute('href') : 'news.html';
+            if (link && link.target) {
+              card.target = link.target;
+              card.rel = 'noopener';
+            }
+            card.dataset.date = date;
+            card.dataset.search = article.textContent;
+            card.innerHTML = `
+              <div class="content-meta"><span class="tag">${article.querySelector('.tag')?.textContent || '最新内容'}</span><time datetime="${date}">${dateLabel}</time></div>
+              <h3>${article.querySelector('h3')?.textContent || '未命名内容'}</h3>
+              <p>${article.querySelector('.ex')?.textContent || ''}</p>
+              <span class="read-more">阅读文章 →</span>`;
+            return card;
+          });
+
+          cards.forEach(card => card.remove());
+          cards = freshCards;
+          cards.forEach(card => track.insertBefore(card, empty));
+          filterCards();
+        } catch (_) {
+          // 保留页面内置内容作为离线回退。
+        }
+      }
 
       function filterCards() {
         const query = normalize(input.value);
@@ -554,6 +595,7 @@
       track.addEventListener('mouseleave', startAuto);
       track.addEventListener('focusin', () => clearInterval(autoTimer));
       track.addEventListener('focusout', startAuto);
+      loadLatestArticles();
       startAuto();
     })();
   </script>
