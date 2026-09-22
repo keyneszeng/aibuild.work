@@ -325,4 +325,22 @@
     });
   });
 
+  // ── 13. 资讯页分类筛选 ──
+  const filterBar = document.getElementById('filters');
+  const newsList = document.getElementById('news-list');
+  if (filterBar && newsList) {
+    const items = Array.from(newsList.querySelectorAll('.post-item'));
+    filterBar.querySelectorAll('button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterBar.querySelectorAll('button').forEach((b) => b.classList.remove('on'));
+        btn.classList.add('on');
+        const cat = btn.dataset.cat || 'all';
+        items.forEach((item) => {
+          const match = cat === 'all' || item.dataset.cat === cat;
+          item.style.display = match ? '' : 'none';
+        });
+      });
+    });
+  }
+
 })();
