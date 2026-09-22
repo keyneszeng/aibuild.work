@@ -159,6 +159,7 @@
   }
 }
 </style>
+<link rel="stylesheet" href="site-theme.css">
 </head>
 <body>
 
@@ -180,10 +181,9 @@
       AIBUILD.WORK
     </a>
     <div class="navbar-links">
-      <a href="/#lines">课程</a>
-      <a href="/#news" class="nav-keep">资讯</a>
-      <a href="/#repos">仓库</a>
-      <a href="/#free" class="btn btn-ghost" style="padding:6px 14px;font-size:13px;margin-left:4px">咨询</a>
+      <a href="/">首页</a>
+      <a href="/news.html" class="nav-keep">最新内容</a>
+      <a href="/ai-curriculum.html">课程</a>
     </div>
   </div>
 </nav>
@@ -207,9 +207,9 @@
   </div>
 
   <!-- 文章列表 -->
-  <div class="news-list anim-stagger" id="news-list">
+  <div class="news-list anim-stagger auto-sort" id="news-list">
 
-    <article class="post-item card tilt-card" data-cat="model">
+    <article class="post-item card tilt-card" data-cat="model" data-date="2026-07-01">
       <span class="tag">模型动态</span>
       <h3>Anthropic 发布 Claude Opus 5</h3>
       <div class="meta">Anthropic · 2026-07</div>
@@ -217,7 +217,7 @@
       <div class="read"><a href="https://www.anthropic.com/news/claude-opus-5" target="_blank" rel="noopener">阅读原文 →</a></div>
     </article>
 
-    <article class="post-item card" data-cat="agent">
+    <article class="post-item card" data-cat="agent" data-date="2026-01-01">
       <span class="tag">Agent</span>
       <h3>OpenAI 被 Gartner 评为企业编码智能体领导者</h3>
       <div class="meta">OpenAI · 2026</div>
@@ -225,7 +225,7 @@
       <div class="read"><a href="https://openai.com/index/gartner-2026-agentic-coding-leader/" target="_blank" rel="noopener">阅读原文 →</a></div>
     </article>
 
-    <article class="post-item card" data-cat="agent">
+    <article class="post-item card" data-cat="agent" data-date="2026-01-01">
       <span class="tag">Agent</span>
       <h3>OpenAI Codex 2026 实战评测</h3>
       <div class="meta">zackproser.com · 2026</div>
@@ -233,7 +233,7 @@
       <div class="read"><a href="https://zackproser.com/blog/openai-codex-review-2026" target="_blank" rel="noopener">阅读原文 →</a></div>
     </article>
 
-    <article class="post-item card" data-cat="report">
+    <article class="post-item card" data-cat="report" data-date="2026-01-01">
       <span class="tag">行业报告</span>
       <h3>Google Cloud《2026 AI Agent 趋势报告》</h3>
       <div class="meta">Google Cloud · 2026</div>
@@ -241,7 +241,7 @@
       <div class="read"><a href="https://cloud.google.com/resources/content/ai-agent-trends-2026?hl=zh-CN" target="_blank" rel="noopener">阅读原文 →</a></div>
     </article>
 
-    <article class="post-item card" data-cat="cn">
+    <article class="post-item card" data-cat="cn" data-date="2026-01-01">
       <span class="tag">中文深度</span>
       <h3>15 篇 AI Agent 研报，看懂 2026 行业全景</h3>
       <div class="meta">知乎 · 王吉伟频道 · 2026</div>
@@ -249,7 +249,7 @@
       <div class="read"><a href="https://zhuanlan.zhihu.com/p/1996902325206405568" target="_blank" rel="noopener">阅读原文 →</a></div>
     </article>
 
-    <article class="post-item card tilt-card" data-cat="model">
+    <article class="post-item card tilt-card" data-cat="model" data-date="2026-01-01">
       <span class="tag">模型动态</span>
       <h3>Claude 发布新版「宪法」</h3>
       <div class="meta">Anthropic · 2026-01</div>
@@ -257,7 +257,7 @@
       <div class="read"><a href="https://www.anthropic.com/news/claude-new-constitution" target="_blank" rel="noopener">阅读原文 →</a></div>
     </article>
 
-    <article class="post-item card" data-cat="agent">
+    <article class="post-item card" data-cat="agent" data-date="2026-07-02">
       <span class="tag">国产 Agent</span>
       <h3>苏乐：WorkBuddy 国产通用 Agent 实操教程</h3>
       <div class="meta">苏乐 @ai_suxiaole · 2026-07-02</div>
@@ -269,7 +269,7 @@
       </div>
     </article>
 
-    <article class="post-item card" data-cat="agent">
+    <article class="post-item card" data-cat="agent" data-date="2026-08-14">
       <span class="tag">国产 Agent / 模型</span>
       <h3>卡兹克：DeepSeek Harness 深度解读</h3>
       <div class="meta">数字生命卡兹克 @Khazix0918 · 2026-08-14</div>
@@ -278,16 +278,6 @@
         <a href="posts/deepseek-harness-kazix.html">阅读整理版 →</a>
         <span style="color:var(--txt-tertiary);margin:0 6px">·</span>
         <a href="https://x.com/Khazix0918/status/2088074732730208592" target="_blank" rel="noopener">看原文 ↗</a>
-      </div>
-    </article>
-
-    <article class="post-item card tilt-card" data-cat="agent">
-      <span class="tag">实用工具</span>
-      <h3>ChatGPT 修图 20 条提示词</h3>
-      <div class="meta">AIBUILD.WORK · 2026-09-22</div>
-      <p class="ex">20 条可直接复制使用的 ChatGPT 修图提示词，按用途分为抠图与背景、画质与修复、色彩与光影、内容编辑、构图与合成、风格转换六组。上传照片、粘贴提示词就能出图，不用图层、不用蒙版。</p>
-      <div class="read">
-        <a href="posts/chatgpt-photo-prompts.html">阅读整理版 →</a>
       </div>
     </article>
 

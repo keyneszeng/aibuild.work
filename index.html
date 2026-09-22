@@ -410,8 +410,9 @@
       *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }
     }
   </style>
+  <link rel="stylesheet" href="site-theme.css">
 </head>
-<body>
+<body class="home-page">
   <div class="visual-layer" aria-hidden="true">
     <span class="ink-wash"></span>
     <span class="tech-orbit orbit-a"></span>
@@ -448,42 +449,42 @@
         </div>
 
         <div class="content-track" id="content-track" tabindex="0" aria-label="最新内容列表">
-          <a class="content-card" href="posts/deepseek-harness-kazix.html" data-search="deepseek harness agent 插件 智能体 产品 创新">
+          <a class="content-card" href="posts/deepseek-harness-kazix.html" data-date="2026-08-14" data-search="deepseek harness agent 插件 智能体 产品 创新">
             <div class="content-meta"><span class="tag">Agent</span><time datetime="2026-08-14">08.14</time></div>
             <h3>DeepSeek Harness：一切皆插件的 Agent 新思路</h3>
             <p>理解 Agent 如何现场创造插件改造自己，以及这种产品形态目前的真实价值与门槛。</p>
             <span class="read-more">阅读文章 →</span>
           </a>
 
-          <a class="content-card" href="posts/workbuddy-suxiaole.html" data-search="workbuddy 办公 agent 自动化 ppt 数据 汇报 教程">
+          <a class="content-card" href="posts/workbuddy-suxiaole.html" data-date="2026-07-02" data-search="workbuddy 办公 agent 自动化 ppt 数据 汇报 教程">
             <div class="content-meta"><span class="tag">办公效率</span><time datetime="2026-07-02">07.02</time></div>
             <h3>WorkBuddy：用通用 Agent 接手日常办公任务</h3>
             <p>从安装到汇报、数据、PPT 和自定义 Skill，搭建一套可以反复使用的个人工作流。</p>
             <span class="read-more">阅读教程 →</span>
           </a>
 
-          <a class="content-card" href="course-content/" data-search="codex 编程 开发 产品 项目 软件 教程 课件">
+          <a class="content-card" href="course-content/" data-date="2026-08-11" data-search="codex 编程 开发 产品 项目 软件 教程 课件">
             <div class="content-meta"><span class="tag">Codex</span><time datetime="2026-08-11">课程</time></div>
             <h3>Codex 入门：让 AI 成为产品与开发协作伙伴</h3>
             <p>学习如何表达任务、组织上下文、检查交付，并推动一个真实的软件项目向前走。</p>
             <span class="read-more">进入课件 →</span>
           </a>
 
-          <a class="content-card" href="course-content/职场人工作提效实战营/" data-search="职场 工作 提效 行政 销售 客服 运营 自动化">
+          <a class="content-card" href="course-content/职场人工作提效实战营/" data-date="2026-08-11" data-search="职场 工作 提效 行政 销售 客服 运营 自动化">
             <div class="content-meta"><span class="tag">职场人</span><time datetime="2026-08-11">8 节</time></div>
             <h3>AI 工作提效：把重复工作变成稳定流程</h3>
             <p>面向行政、销售、客服和运营，用可复用的 AI 工作流释放时间，专注更有价值的任务。</p>
             <span class="read-more">开始学习 →</span>
           </a>
 
-          <a class="content-card" href="course-content/产品经理进阶营/" data-search="产品经理 创业者 ai 产品 agent prd 案例">
+          <a class="content-card" href="course-content/产品经理进阶营/" data-date="2026-08-11" data-search="产品经理 创业者 ai 产品 agent prd 案例">
             <div class="content-meta"><span class="tag">产品创新</span><time datetime="2026-08-11">10 节</time></div>
             <h3>AI 产品经理：从发现问题到设计可落地产品</h3>
             <p>不只会使用工具，而是理解场景、定义价值并完成 PRD、Agent 方案和产品案例。</p>
             <span class="read-more">开始学习 →</span>
           </a>
 
-          <a class="content-card" href="ai-curriculum.html" data-search="课程 学习 儿童 学生 大学生 职场 产品经理 路径">
+          <a class="content-card" href="ai-curriculum.html" data-date="2026-08-11" data-search="课程 学习 儿童 学生 大学生 职场 产品经理 路径">
             <div class="content-meta"><span class="tag">学习路径</span><time datetime="2026-08-11">5 条</time></div>
             <h3>AI 技能升级课程：找到适合当前阶段的入口</h3>
             <p>从儿童创造力、学生学习力到职场提效与产品创新，选择与你最相关的学习路线。</p>
@@ -505,10 +506,12 @@
     (() => {
       const input = document.querySelector('#content-search');
       const track = document.querySelector('#content-track');
-      const cards = [...document.querySelectorAll('.content-card')];
       const count = document.querySelector('#result-count');
       const hint = document.querySelector('#search-hint');
       const empty = document.querySelector('#empty-card');
+      const cards = [...document.querySelectorAll('.content-card')]
+        .sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
+      cards.forEach(card => track.insertBefore(card, empty));
       const prev = document.querySelector('#slide-prev');
       const next = document.querySelector('#slide-next');
       let autoTimer;

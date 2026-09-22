@@ -6,6 +6,14 @@
 (function () {
   'use strict';
 
+  // 带 data-date 的内容列表始终按发布日期从新到旧排列。
+  document.querySelectorAll('.auto-sort').forEach((list) => {
+    [...list.children]
+      .filter((item) => item.dataset.date)
+      .sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date))
+      .forEach((item) => list.appendChild(item));
+  });
+
   // ── 1. 粒子网络 Canvas ──
   const canvas = document.getElementById('particle-canvas');
   if (canvas) {
@@ -54,7 +62,7 @@
       draw() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(145, 180, 255, ${this.alpha})`;
+        ctx.fillStyle = `rgba(7, 143, 130, ${this.alpha * 0.45})`;
         ctx.fill();
       }
     }
@@ -79,7 +87,7 @@
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(91, 141, 239, ${alpha})`;
+            ctx.strokeStyle = `rgba(53, 109, 161, ${alpha * 0.55})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -324,23 +332,5 @@
       }
     });
   });
-
-  // ── 13. 资讯页分类筛选 ──
-  const filterBar = document.getElementById('filters');
-  const newsList = document.getElementById('news-list');
-  if (filterBar && newsList) {
-    const items = Array.from(newsList.querySelectorAll('.post-item'));
-    filterBar.querySelectorAll('button').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        filterBar.querySelectorAll('button').forEach((b) => b.classList.remove('on'));
-        btn.classList.add('on');
-        const cat = btn.dataset.cat || 'all';
-        items.forEach((item) => {
-          const match = cat === 'all' || item.dataset.cat === cat;
-          item.style.display = match ? '' : 'none';
-        });
-      });
-    });
-  }
 
 })();

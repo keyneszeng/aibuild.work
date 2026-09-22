@@ -1,0 +1,203 @@
+/* aibuild.work · 统一视觉系统：宣纸白 × 墨青 × 青玉 × 朱砂 */
+:root {
+  --bg: #f7f5ee;
+  --bg2: #f1f4ee;
+  --bg3: #e9f1ed;
+  --card: rgba(255, 255, 255, 0.82);
+  --card2: rgba(250, 251, 247, 0.92);
+  --card-hover: rgba(246, 251, 248, 0.98);
+  --card-border: rgba(28, 61, 61, 0.14);
+  --card-border-hover: rgba(7, 143, 130, 0.42);
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(28, 61, 61, 0.11);
+  --txt: #182b30;
+  --txt-secondary: #5f7273;
+  --txt-tertiary: #899796;
+  --text: #182b30;
+  --muted: #5f7273;
+  --soft: #899796;
+  --fg: #182b30;
+  --sub: #5f7273;
+  --bd: rgba(28, 61, 61, 0.14);
+  --line: rgba(28, 61, 61, 0.13);
+  --accent: #356da1;
+  --accent-hover: #23577f;
+  --accent2: #078f82;
+  --accent3: #2f827a;
+  --blue: #356da1;
+  --mint: #078f82;
+  --purple: #6d7393;
+  --red: #b64635;
+  --chip: rgba(7, 143, 130, 0.055);
+  --glow: rgba(53, 109, 161, 0.13);
+  --glow2: rgba(7, 143, 130, 0.11);
+  --shadow: 0 12px 34px rgba(39, 72, 67, 0.08);
+  --shadow-lg: 0 18px 52px rgba(39, 72, 67, 0.12);
+}
+
+body {
+  color: var(--txt);
+  background:
+    linear-gradient(rgba(255,255,255,.56), rgba(255,255,255,.56)),
+    repeating-linear-gradient(0deg, rgba(36,72,65,.018) 0, rgba(36,72,65,.018) 1px, transparent 1px, transparent 5px),
+    radial-gradient(circle at 12% 14%, rgba(53,109,161,.11), transparent 30%),
+    radial-gradient(circle at 88% 76%, rgba(7,143,130,.10), transparent 28%),
+    var(--bg);
+  background-attachment: fixed;
+}
+
+h1, h2, .hero h1, .article-header h1, .hero-news h1 {
+  font-family: 'Songti SC', 'STSong', 'Noto Serif SC', serif;
+  color: var(--txt);
+}
+
+a { text-underline-offset: 3px; }
+
+/* 统一导航 */
+.navbar {
+  background: rgba(247, 245, 238, 0.78);
+  border-bottom-color: rgba(28,61,61,.1);
+  box-shadow: none;
+}
+
+.navbar.scrolled {
+  background: rgba(247, 245, 238, 0.94);
+  border-bottom-color: rgba(28,61,61,.14);
+  box-shadow: 0 8px 30px rgba(39,72,67,.07);
+}
+
+.navbar-brand { color: var(--txt); }
+.navbar-brand .logo-dot, .logo-dot {
+  border-radius: 2px;
+  background: var(--red);
+  box-shadow: 0 0 0 3px rgba(182,70,53,.09);
+}
+
+.navbar-links a { color: var(--txt-secondary); }
+.navbar-links a:hover { color: var(--txt); background: rgba(7,143,130,.055); }
+
+/* 统一背景动效 */
+#particle-canvas { opacity: .46; }
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(7,143,130,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(7,143,130,.035) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 72% 55% at 50% 0%, #000 18%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 72% 55% at 50% 0%, #000 18%, transparent 100%);
+}
+
+.bg-aurora .aurora:nth-child(1) { background: radial-gradient(circle, rgba(53,109,161,.12), transparent); }
+.bg-aurora .aurora:nth-child(2) { background: radial-gradient(circle, rgba(7,143,130,.10), transparent); }
+.bg-aurora .aurora:nth-child(3) { background: radial-gradient(circle, rgba(182,70,53,.055), transparent); }
+.scanlines { opacity: .16; mix-blend-mode: multiply; }
+
+/* 统一卡片、按钮和标签 */
+.card, .pcard, .qcard, .capwrap, .roadmap, .resgrid > *, .risk li,
+.article-lead, .article-body .box, .article-foot {
+  color: var(--txt);
+  background: linear-gradient(145deg, rgba(255,255,255,.91), rgba(249,250,245,.78));
+  border-color: var(--card-border);
+  box-shadow: var(--shadow);
+}
+
+.card:hover, .pcard:hover {
+  border-color: var(--card-border-hover);
+  box-shadow: var(--shadow-lg);
+}
+
+.card::before {
+  background: linear-gradient(90deg, transparent, rgba(7,143,130,.16), transparent);
+}
+
+.grad {
+  background: linear-gradient(100deg, var(--accent), var(--accent2), var(--accent));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.badge, .tag, .pill {
+  color: var(--accent2);
+  background: rgba(255,255,255,.66);
+  border-color: var(--card-border);
+}
+
+.badge .dot { background: var(--red); box-shadow: 0 0 9px rgba(182,70,53,.28); }
+
+.btn-primary, .filters button.on {
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  box-shadow: 0 7px 20px rgba(7,143,130,.15);
+}
+
+.btn-secondary, .btn-ghost, .filters button {
+  color: var(--txt-secondary);
+  background: rgba(255,255,255,.66);
+  border-color: var(--card-border);
+}
+
+.btn-secondary:hover, .btn-ghost:hover, .filters button:hover {
+  color: var(--txt);
+  background: rgba(7,143,130,.055);
+  border-color: var(--accent2);
+}
+
+/* 资讯与文章 */
+.hero-news .sub, .article-lead, .post-item .ex, .article-foot { color: var(--txt-secondary); }
+.post-item .tag { background: rgba(7,143,130,.05); }
+.post-item .read, .article-foot { border-color: var(--card-border); }
+.post-item .read a, .article-meta a, .article-foot a { color: var(--red); }
+.article-body h2 { color: var(--accent2); }
+.article-body h3, .article-body p, .article-body li { color: var(--txt); }
+.article-body .tagline { border-left-color: var(--red); }
+.article-body .code, main code { color: var(--accent2); background: rgba(7,143,130,.07); }
+
+/* 课程矩阵 */
+.cur-header { background: rgba(247,245,238,.94); border-bottom-color: var(--line); }
+.cur-topbar .brand, .cur-topbar nav button { color: var(--txt-secondary); }
+.cur-topbar nav button:hover, .cur-topbar nav button.active { color: var(--accent2); background: rgba(7,143,130,.06); }
+.cur-topbar nav button.active::after { background: var(--red); }
+.langswitch { background: rgba(255,255,255,.66); border-color: var(--line); }
+.langswitch button { color: var(--txt-secondary); }
+.langswitch button.active { color: #fff; background: var(--accent2); }
+.hero, .detail { background: transparent; color: var(--txt); }
+.sec .bar { background: linear-gradient(var(--red), var(--accent2)); }
+
+/* 独立课件阅读器 */
+body > header {
+  background: rgba(247,245,238,.88);
+  border-bottom-color: var(--line);
+  backdrop-filter: blur(18px);
+}
+
+body > header a { color: var(--red); }
+body > header h1 { color: var(--txt); }
+
+body > .wrap > nav,
+body > .wrap > main {
+  color: var(--txt);
+  background: rgba(255,255,255,.82);
+  border-color: var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+body > .wrap > nav h3 { color: var(--txt-secondary); }
+body > .wrap > nav a { color: var(--txt); }
+body > .wrap > nav a:hover,
+body > .wrap > nav a.active { color: #fff; background: var(--accent2); }
+body > .wrap > main h1 { border-left-color: var(--red); }
+body > .wrap > main h2 { color: var(--accent2); }
+body > .wrap > main blockquote { border-left-color: var(--red); background: rgba(182,70,53,.045); }
+body > .wrap > main th { background: rgba(7,143,130,.055); }
+body > .wrap > main th,
+body > .wrap > main td { border-color: var(--line); }
+body > .wrap > main pre { color: #edf7f5; background: #17302f; }
+
+footer, .cur-footer { color: var(--txt-tertiary); border-color: var(--line); }
+footer a, .cur-footer a { color: var(--red); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
