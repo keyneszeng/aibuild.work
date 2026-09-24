@@ -216,7 +216,10 @@
           }
         });
       },
-      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+      // threshold 用 0，不要用比例：高度远超视口的元素（长文正文容器等）
+      // 永远达不到设定比例，会一直停在 opacity:0 导致内容不可见。
+      // 触发时机交给 rootMargin 控制（元素顶部进入视口底部上方 40px 时触发）。
+      { threshold: 0, rootMargin: '0px 0px -40px 0px' }
     );
     animElements.forEach((el) => observer.observe(el));
   } else {

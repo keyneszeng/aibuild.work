@@ -304,7 +304,9 @@
     这种「递归中的递归」结构，是当下自我改进方向里少见的、把工程闭环写清楚的一份实现。
   </div>
 
-  <div class="article-body anim-fade">
+  <!-- 正文容器不加 anim-fade：长文高度远超视口，IntersectionObserver 的
+       threshold 0.08 永远达不到，会导致正文整体停在 opacity:0 不可见 -->
+  <div class="article-body">
 
     <div class="box">
       <div class="h">📌 本文要点速览</div>
