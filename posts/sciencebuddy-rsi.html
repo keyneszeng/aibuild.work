@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScienceBuddy 双递归自我改进 · 创新资讯</title>
+<meta name="description" content="ScienceBuddy 把 Agent 的「流程」和「权重」当成两个互相喂料的优化对象：内递归固定模型改 harness 代码，外递归固定 harness 用 GRPO 训练模型，选中的流程跨轮继承。本文拆解它的算法机制、证据隔离设计与实验配方，并指出它自己承认的五个边界。">
+<link rel="stylesheet" href="../style.css">
+<style>
+/* ── 文章页专属样式 ── */
+
+.article-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 22px;
+}
+
+.article-header {
+  padding: 100px 0 10px;
+}
+
+.article-header h1 {
+  font-size: clamp(24px, 4.4vw, 36px);
+  line-height: 1.28;
+  font-weight: 800;
+  margin-bottom: 14px;
+  letter-spacing: -0.5px;
+}
+
+.article-meta {
+  color: var(--txt-tertiary);
+  font-size: 13.5px;
+  margin-bottom: 10px;
+}
+
+.article-meta a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.article-meta a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+.article-cover {
+  margin: 24px 0 8px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow);
+}
+
+.article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.article-lead {
+  color: var(--txt-secondary);
+  font-size: 16px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 22px 0 32px;
+  line-height: 1.7;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.article-body h2 {
+  font-size: 22px;
+  margin: 38px 0 14px;
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.article-body h3 {
+  font-size: 17px;
+  margin: 24px 0 8px;
+  color: var(--txt);
+  font-weight: 700;
+}
+
+.article-body p {
+  margin: 14px 0;
+  color: var(--txt);
+  opacity: 0.92;
+  line-height: 1.8;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 12px 0 12px 22px;
+  color: var(--txt);
+  opacity: 0.92;
+}
+
+.article-body li {
+  margin: 8px 0;
+  line-height: 1.7;
+}
+
+.article-body .box {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 22px 0;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.article-body .box .h {
+  color: var(--accent2);
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.article-body .tagline {
+  color: var(--txt-secondary);
+  font-size: 13.5px;
+  border-left: 3px solid var(--accent);
+  padding-left: 14px;
+  margin: 18px 0;
+  font-style: italic;
+}
+
+.article-body .code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xs);
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--accent2);
+}
+
+/* ── 代码 / 公式块 ── */
+.article-body pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: rgba(0, 0, 0, 0.34);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 16px 18px;
+  margin: 18px 0;
+  overflow-x: auto;
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--accent2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.article-body pre code {
+  font-family: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.article-body p code,
+.article-body li code,
+.article-body td code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-xs);
+  padding: 2px 7px;
+  font-size: 12.5px;
+  color: var(--accent2);
+}
+
+/* ── 表格 ── */
+.article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13.5px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.article-body th {
+  text-align: left;
+  padding: 11px 14px;
+  background: rgba(91, 141, 239, 0.10);
+  color: var(--txt);
+  font-weight: 700;
+  font-size: 13px;
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap;
+}
+
+.article-body td {
+  padding: 10px 14px;
+  color: var(--txt-secondary);
+  border-bottom: 1px solid rgba(120, 160, 255, 0.07);
+  line-height: 1.6;
+}
+
+.article-body tr:last-child td {
+  border-bottom: none;
+}
+
+.article-body td strong {
+  color: var(--txt);
+}
+
+.article-foot {
+  margin-top: 44px;
+  padding: 22px 24px;
+  border: 1px dashed var(--card-border);
+  border-radius: var(--radius);
+  color: var(--txt-secondary);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.article-foot b {
+  color: var(--accent2);
+  font-weight: 700;
+}
+
+.article-foot a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.article-foot a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .article-header {
+    padding: 80px 0 10px;
+  }
+  .article-wrap {
+    padding: 0 16px;
+  }
+  .article-body table {
+    font-size: 12.5px;
+  }
+  .article-body th,
+  .article-body td {
+    padding: 8px 10px;
+  }
+}
+</style>
+<link rel="stylesheet" href="../site-theme.css">
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div class="bg-grid"></div>
+<div class="bg-aurora">
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+  <div class="aurora"></div>
+</div>
+<div class="scanlines"></div>
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="../" class="navbar-brand">
+      <span class="logo-dot"></span>
+      AIBUILD.WORK
+    </a>
+    <div class="navbar-links">
+      <a href="../">首页</a>
+      <a href="../news.html" class="nav-keep">← 最新内容</a>
+      <a href="../ai-curriculum.html">课程</a>
+    </div>
+  </div>
+</nav>
+
+<div class="article-wrap">
+
+  <header class="article-header anim-fade-up">
+    <div class="badge"><span class="dot"></span> Agent · 深度解读</div>
+    <h1>ScienceBuddy：Agent 改自己的流程，模型再改自己</h1>
+    <div class="article-meta">
+      整理：AIBUILD.WORK · 2026-09-24
+    </div>
+  </header>
+
+  <div class="article-cover anim-fade">
+    <img src="img/sciencebuddy-rsi-cover.jpg?v=1"
+         alt="ScienceBuddy 双递归自我改进示意图：外环为训练模型，内环为改进流程，中心是 Agent 节点">
+  </div>
+
+  <div class="article-lead anim-fade">
+    一个科研 Agent，不只是帮你读论文、跑数据——它还会把自己<strong>「怎么干活」的流程代码重写一遍</strong>，再用重写后的流程去训练自己的模型，然后进入下一轮。
+    这种「递归中的递归」结构，是当下自我改进方向里少见的、把工程闭环写清楚的一份实现。
+  </div>
+
+  <div class="article-body anim-fade">
+
+    <div class="box">
+      <div class="h">📌 本文要点速览</div>
+      <ul>
+        <li><b>两个递归交替</b>：内递归固定模型、搜索更好的 harness（流程代码）；外递归固定 harness、用 GRPO 训练模型。选中的流程<b>跨轮继承</b>。</li>
+        <li><b>最见功力的是证据隔离</b>：私有参考答案、数值打分、Val 轨迹、Test 结果全部不得进入改进器的学习回路。</li>
+        <li><b>配方公开</b>：Qwen3.5-4B、715/90/90 冻结任务集、3 轮 h→r、每阶段 3 步 × 16 交互 × 3 候选、30 次 RL 更新、学习率 <span class="code">1e-6</span>。</li>
+        <li><b>门槛不低</b>：Linux + CUDA 13 + Docker + <b>8 张 A100</b>，模型权重与任务数据需另外授权。</li>
+        <li><b>五个边界它自己写了</b>：Test 不是独立测试集、反馈是模拟的、产品演示 ≠ 实验、完整源码未开源、默认跑法是 debug 模式。</li>
+      </ul>
+    </div>
+
+    <h2>一、先看它想解决什么问题</h2>
+
+    <p>自我改进是 Agent 领域最诱人的方向，也是最容易翻车的地方。目前常见的做法有两类，各缺一半：</p>
+
+    <ul>
+      <li><strong>只改提示词与工作流</strong>：让模型自己写更好的 prompt、更好的工具编排。流程确实能变好，但模型本身没变，能力天花板就卡在那里。</li>
+      <li><strong>只做 RL 训练</strong>：用奖励去调模型权重。但训练用的「经验」来自固定流程，流程本身的缺陷会被固化下来，越训越偏。</li>
+    </ul>
+
+    <p>ScienceBuddy 的思路是把这两件事<strong>交替做，并且互相喂料</strong>：</p>
+
+    <ol>
+      <li>模型不动，改 harness——也就是引导 Agent 干活的那个 Python 程序；</li>
+      <li>harness 不动，用新流程产出的轨迹去训练模型；</li>
+      <li>把更新后的模型，交给下一轮的流程改进。</li>
+    </ol>
+
+    <p>项目把这个结构叫 <strong>recursive-in-recursive self-improvement</strong>（递归中的递归自我改进），简称双递归 RSI。</p>
+
+    <h2>二、两个「递归」到底是什么</h2>
+
+    <p>先把两个角色定义清楚：</p>
+
+    <ul>
+      <li><strong>任务模型</strong> <span class="code">M_k</span>：负责生成 Agent 的回复和工具调用决策。<span class="code">k</span> 是模型学习轮次。</li>
+      <li><strong>harness</strong> <span class="code">H_{k,j}</span>：一个 Python 程序，负责组织提示、调用模型、执行工具、管理上下文、提交答案。<span class="code">j</span> 是同一轮内的流程更新步数。</li>
+      <li><strong>辅助模型</strong>：独立于前两者，负责提 harness 修改建议。它的参数在任务模型和 harness 演化期间<strong>始终冻结</strong>。</li>
+    </ul>
+
+    <p>两个递归的定义式：</p>
+
+<pre><code>内递归（固定 M_k，搜更好的 harness）
+H_{k,j+1} = Select(H_{k,j}, C_{k,j}; M_k, D_val)
+
+外递归（固定选中的 harness，RL 更新模型）
+M_{k+1} = GRPO(M_k; H_{k,J}, D_train)
+且 H_{k+1,0} = H_{k,J}</code></pre>
+
+    <p><span class="code">C_{k,j}</span> 是从当前交互证据里提出的候选，<span class="code">J</span> 是每阶段的 harness 步数。</p>
+
+    <p><strong>最关键的一行是 <span class="code">H_{k+1,0} = H_{k,J}</span></strong>：选中的 harness 会被下一轮继承。这才是「递归」的真正来源——不是每轮从零开始，而是把上一轮最好的流程当作起点，一轮轮往上垒。</p>
+
+    <p>默认排期是三轮：</p>
+
+<pre><code>(M0, H0)
+  → h0001: 学流程 → r0001: 学模型 → M1
+  → h0002: 学流程 → r0002: 学模型 → M2
+  → h0003: 学流程 → r0003: 学模型 → M3</code></pre>
+
+    <p>跑完 <span class="code">r0003</span> 就结束，不再加第四个流程阶段。</p>
+
+    <h3>为什么这个交替不是花架子</h3>
+
+    <p>因为两者互为环境：</p>
+
+    <ul>
+      <li><strong>harness 变了</strong> → 模型收集经验的方式变了；</li>
+      <li><strong>模型变了</strong> → 下一轮里「哪些流程改进有效」也变了。</li>
+    </ul>
+
+    <p>这跟「只调 prompt」或「只做 RL」的根本区别就在这里：单一方向的优化，会把另一侧的缺陷锁死。</p>
+
+    <h2>三、内递归：流程是怎么被改掉的</h2>
+
+    <p>这是整套设计里信息量最大的部分。四个关键环节：</p>
+
+    <h3>3.1 交互怎么变成「可用证据」</h3>
+
+    <p>反馈协议是<strong>验证器辅助</strong>的，一共四步：</p>
+
+    <ol>
+      <li>宿主用<strong>私有参考答案</strong>给提交的答案打分；</li>
+      <li>宿主构造一个「允许的研究员回复集合」，选项区分四类情况：接受、答案格式无效、最近出现过工具报错、泛化的「再想想」；</li>
+      <li>辅助模型从这个集合里<strong>选一条</strong>回复。如果输出不合法，就回落到允许的模板，并且把这个回落记录下来；</li>
+      <li>一个 PRM 风格的解释请求，把这条回复和公开执行记录关联起来——模型输出、工具观察、提交的答案、这条回复。</li>
+    </ol>
+
+    <p>之后宿主会校验它的结构、字段地址和反馈分类。</p>
+
+    <p>这里有个容易被忽略的细节：<strong>PRM 的解释只被当作假设</strong>。文档明确写了，一次泛化纠错并不能确立某个具体的科学原因，一次「接受」也不等于验证了中间每一步。</p>
+
+    <h3>3.2 公开证据与私有答案的隔离</h3>
+
+    <p>提案证据<strong>包含</strong>：公开问题、真实的模型输入输出、工具调用、观察、有效的反馈标注、执行诊断。</p>
+
+    <p>提案证据<strong>排除</strong>：私有参考答案、数值打分结果。</p>
+
+    <p>而且，无效的 PRM 标注不会连带删掉底层的公开执行记录——记录归记录，解释归解释。</p>
+
+    <p>当前步的证据还会与「同阶段内有限选取的早期公开失败／纠正与成功对照」合并。一旦某个候选被采纳，待定证据会被清空，让下一轮搜索反映的是<strong>新</strong> harness，而不是旧流程的旧问题。聚合的提案历史则跨模型更新保留。</p>
+
+    <h3>3.3 提案必须是完整程序，而且得拿证据说话</h3>
+
+    <p>每一步从<strong>同一个父代</strong>请求 3 个独立候选假设。所有提案在候选的 Val 结果揭晓<strong>之前</strong>就全部生成完——避免候选之间互相抄答案。</p>
+
+    <p>每个候选可以整体替换 <span class="code">run(task, api)</span> 程序，覆盖范围包括提示、解析、控制流、记忆、工具编排。</p>
+
+    <p>改进器拿到的接口只有三个命令：</p>
+
+    <table>
+      <thead>
+        <tr><th>命令</th><th>用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>read</code></td><td>查看某个允许的公开字段，比如真实的模型输入或工具观察</td></tr>
+        <tr><td><code>propose</code></td><td>返回完整 Python 程序、假设、理由和证据 ID</td></tr>
+        <tr><td><code>skip</code></td><td>说明为什么现有证据不支持做出改动</td></tr>
+      </tbody>
+    </table>
+
+    <p>约束很硬：</p>
+
+    <ul>
+      <li>一个提案必须<strong>引用至少两个不同 Train 任务的证据</strong>；</li>
+      <li>每个候选最多 3 次 <span class="code">read</span>、2 次修复尝试、6 次辅助调用；</li>
+      <li>宿主解析候选 Python，但<strong>不执行</strong>它；</li>
+      <li>结构校验要求同步的 <span class="code">run(task, api)</span> 接口，并拒绝已知的无效指令模式。</li>
+    </ul>
+
+    <p class="tagline">「必须引用两个不同任务的证据」这条特别值得注意——它挡住了「从一个案例里硬推出一条通用规则」这种最常见的过拟合。</p>
+
+    <h3>3.4 怎么选出更好的那一个</h3>
+
+    <p>结构合法的候选，必须先在指定的 preflight 任务上跑通。preflight <strong>只检查执行和答案格式是否合法，不要求科学上正确</strong>。字节完全相同的程序直接排除。</p>
+
+    <p>然后，父代和每个剩余候选都在<strong>全部 90 个 Val 任务</strong>上评估：</p>
+
+    <ul>
+      <li>每个任务只取<strong>第一次提交</strong>的答案，不给研究员反馈；</li>
+      <li>temperature 0，匹配的任务种子和宿主预算；</li>
+      <li>必须完整覆盖所有任务 ID；</li>
+      <li>候选评估任务共享同一个并发上限。</li>
+    </ul>
+
+    <p>打分公式：</p>
+
+<pre><code>S(H; M, D_val) = (1/|D_val|) · Σ 1[ Verify_x( a⁽¹⁾(M, H, x) ) = 1 ]</code></pre>
+
+    <p><span class="code">a⁽¹⁾</span> 就是第一次提交的答案。</p>
+
+    <p>替换条件非常严：<strong>候选必须完整 Val 评估无运行时错误，且分数严格高于父代</strong>。</p>
+
+    <ul>
+      <li>平局 → 保留父代；</li>
+      <li>多个候选都高于父代 → 更早的候选胜出；</li>
+      <li>父代在<strong>每一步都重新评估</strong>，不使用上一次比较的缓存分数。</li>
+    </ul>
+
+    <p>还有一个关键隔离：<strong>只有聚合的 Val 比较进入后续提案历史，Val 轨迹不会成为改进器的证据。</strong></p>
+
+    <h2>四、外递归：模型是怎么被训出来的</h2>
+
+    <h3>4.1 用新鲜轨迹，不用回放</h3>
+
+    <p>选中的 harness 在整个 RL 阶段<strong>冻结</strong>。SkyRL 每批采样 8 个任务实例、每实例 8 次尝试，默认 64 个 episode。</p>
+
+    <p>这些是当前任务模型产出的<strong>新鲜 on-policy 尝试</strong>。要注意：harness 阶段的那些对话提供的是<strong>流程性证据</strong>，不是拿来给 RL 重放的策略补全。Val 任务排除在 RL 训练索引之外。</p>
+
+    <p>训练用 temperature 1、top-p 1、关闭 thinking。<strong>第一次提交答案就结束 episode</strong>，RL 期间不提供模拟研究员回复。</p>
+
+    <h3>4.2 奖励就是「首答对错」</h3>
+
+<pre><code>R_i = Verify_{x_i}( a_i⁽¹⁾ ) ∈ {0, 1}</code></pre>
+
+    <p>验证器解析要求的答案格式，核对私有参考答案。<strong>从未提交答案的尝试没有成功结果。</strong> PRM 的反馈标注不能替代这个奖励。</p>
+
+    <h3>4.3 信用分配：一个 episode 只给一次奖励</h3>
+
+    <p>每个模型调用变成一行训练数据，包含它真实的 prompt token IDs、completion token IDs 和 rollout 对数概率。同一个 episode 里的调用共享一个轨迹身份。</p>
+
+    <p><strong>episode 奖励只在最后一次 completion 上放一次</strong>，更早的调用不单独拿终止奖励。</p>
+
+    <p>只有<strong>模型生成的 completion token</strong> 是训练目标。prompt token、工具输出、模拟研究员文本、生成的 harness Python——统统不作为模型输出去优化。</p>
+
+    <p class="tagline">最后这一条很讲究：harness 的 Python 是辅助模型写的，不是任务模型写的，自然不该算到任务模型的梯度里。</p>
+
+    <p>GRPO 的组内相对优势：</p>
+
+<pre><code>μ_x = (1/G) · Σ R_i
+A_i = (R_i − μ_x) / ( std(R_1 … R_G) + δ )</code></pre>
+
+    <ul>
+      <li>组内奖励全同 → 相对优势为 0；</li>
+      <li>组内两种结果都有 → 有正有负；</li>
+      <li>零调用失败不提供训练行，整批为空会被直接拒绝。</li>
+    </ul>
+
+    <p>裁剪目标用学习率 <span class="code">1e-6</span>，每批一个更新 epoch，<strong>KL loss 与 KL reward penalty 都关闭</strong>，默认 30 次优化更新。</p>
+
+    <h3>4.4 导出必须过验证才算数</h3>
+
+    <p>最后更新完成后，worker 导出模型权重、配置和 tokenizer。然后在<strong>独立的评估进程</strong>里加载这个导出，检查 Test 完整覆盖且模型生成非空，才接受这个阶段。</p>
+
+    <p>文档写得很直白：<strong>检查点目录存在、或训练进程正常退出，本身都不算数。</strong></p>
+
+    <h2>五、宿主始终攥在手里的东西</h2>
+
+    <p>生成的 harness 可以自由编排 Agent 行为，但科学环境和训练契约始终归宿主：</p>
+
+    <table>
+      <thead>
+        <tr><th>组件</th><th>职责</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>harness 控制器</td><td>执行候选的独立 Python 程序</td></tr>
+        <tr><td><code>api.generate(messages)</code></td><td>在宿主预算下请求任务模型补全</td></tr>
+        <tr><td><code>api.execute(code)</code></td><td>在独立持久化的科学执行容器里跑 Python</td></tr>
+        <tr><td><code>api.submit(answer)</code></td><td>把文本提交给宿主验证器</td></tr>
+        <tr><td>宿主 broker</td><td>强制溯源、限额、评分、episode 终止</td></tr>
+        <tr><td>训练适配器</td><td>保留真实模型上下文、对数概率、completion mask</td></tr>
+      </tbody>
+    </table>
+
+    <p>两个容器（控制器和执行容器）<strong>都没有网络访问</strong>。只有科学执行容器拿到公开任务资产和冻结的数据湖；私有参考答案和服务凭据留在宿主上。</p>
+
+    <p>消息会标明来源：task / model / tool / feedback / harness。宿主校验这些元数据、套用工具历史预算，并在分词<strong>之前</strong>移除元数据。任务问题和反馈必须匹配它们真实的来源。</p>
+
+    <p>宿主还会在配置的 token 预算内裁剪工具响应和较旧的工具历史。<strong>裁剪保留记录下来的溯源和实际缩短后的模型输入</strong>——新 harness 不能靠重命名一个工具观察来绕过预算。</p>
+
+    <div class="box">
+      <div class="h">🎯 这段设计的意图</div>
+      <p style="margin:0"><strong>让 harness 自由改流程，但不给它改规则和评分的机会。</strong>流程可以进化，评判标准不行——这是自我改进系统不跑偏的前提。</p>
+    </div>
+
+    <h2>六、实验配方：想复现要看的数字</h2>
+
+    <table>
+      <thead>
+        <tr><th>组件</th><th>设置</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>任务模型</td><td>Qwen3.5-4B</td></tr>
+        <tr><td>辅助改进器</td><td>远程 Chat Completions 模型，中等推理强度</td></tr>
+        <tr><td>排期</td><td>h0001 → r0001 → h0002 → r0002 → h0003 → r0003</td></tr>
+        <tr><td>每阶段 harness 步数</td><td>3</td></tr>
+        <tr><td>每步训练交互</td><td>16</td></tr>
+        <tr><td>每步候选</td><td>3（同一父代）</td></tr>
+        <tr><td>候选选择</td><td>完整 90 任务 Val 对比</td></tr>
+        <tr><td>每阶段 RL 更新</td><td>30</td></tr>
+        <tr><td>RL 批</td><td>8 任务实例 × 8 次尝试</td></tr>
+        <tr><td>学习率</td><td><code>1e-6</code></td></tr>
+        <tr><td>后端</td><td>SkyRL + FSDP + vLLM</td></tr>
+        <tr><td>KL loss / KL reward penalty</td><td>都关闭</td></tr>
+        <tr><td>任务模型采样</td><td>temperature 1、top-p 1、关闭 thinking</td></tr>
+        <tr><td>评估采样</td><td>temperature 0、每任务一次</td></tr>
+        <tr><td>rollout 并发</td><td>64</td></tr>
+      </tbody>
+    </table>
+
+    <p><strong>数据集</strong>：冻结发布版，715 Train / 90 Val / 90 Test。四个任务家族的分布是 DbQA 411/50/50、GWAS 140/20/20、LitQA2 76/10/10、ProtocolQA 88/10/10。</p>
+
+    <p><strong>单 episode 预算</strong>：</p>
+
+    <table>
+      <thead>
+        <tr><th>项目</th><th>预算</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>上下文</td><td>24,576 token</td></tr>
+        <tr><td>单次生成</td><td>4,096 token</td></tr>
+        <tr><td>模型调用 / 工具调用</td><td>9 / 9</td></tr>
+        <tr><td>可见工具响应</td><td>2,048 token</td></tr>
+        <tr><td>工具历史总量</td><td>8,192 token</td></tr>
+        <tr><td>Python 调用超时</td><td>60 秒</td></tr>
+        <tr><td>episode 超时</td><td>900 秒</td></tr>
+        <tr><td>研究员回复</td><td>流程交互期最多 1 次；RL／评估期 0 次</td></tr>
+      </tbody>
+    </table>
+
+    <div class="box">
+      <div class="h">🖥️ 复现门槛</div>
+      <p style="margin:0">Linux + Python 3.12 + CUDA 13 + Docker + <strong>8 张 A100</strong>。模型权重和任务数据需要另外授权获取，不随代码一起给。</p>
+    </div>
+
+    <h2>七、三点真正值得学的东西</h2>
+
+    <h3>7.1 把「流程」当一等公民，和权重同等对待</h3>
+
+    <p>大多数团队把 Agent 的编排逻辑当工程代码：手写、手改、手工评审。ScienceBuddy 把它变成一个<strong>可搜索、可评估、可继承的对象</strong>——候选是完整 Python 程序，用固定 Val 集对比，严格更优才替换，而且会跨轮继承。</p>
+
+    <p>这意味着「怎么干活」这件事，从工程问题变成了优化问题。这是全文最有迁移价值的一点。</p>
+
+    <h3>7.2 自我改进能跑通的前提是「证据卫生」</h3>
+
+    <p>整套设计里最见功力的是隔离：</p>
+
+    <ul>
+      <li>私有参考答案和数值打分<strong>永不</strong>进入提案证据；</li>
+      <li>Val 只提供聚合比较，<strong>轨迹不进</strong>改进器；</li>
+      <li>Test 不产生任何提案痕迹、反馈或 RL 更新；</li>
+      <li>PRM 的解释被明确定位为<strong>假设</strong>，不是事实；</li>
+      <li>模型只在自己生成的 token 上被优化。</li>
+    </ul>
+
+    <p>自我改进系统最常见的死法，是让「评分器」的信息漏进「被评分者」的学习回路，然后系统学会讨好评分器而不是解决问题。这里的每一条隔离，都在防这件事。</p>
+
+    <h3>7.3 对「测量」的克制，比结果本身更值得抄</h3>
+
+    <p>文档里反复强调：</p>
+
+    <ul>
+      <li>训练准确率衡量的是<strong>变化的采样批次</strong>，不能当成固定的 Test 曲线；</li>
+      <li>Val 分数用于<strong>选择</strong>，不能当成独立 Test 结果；</li>
+      <li>报告要同时给出首答准确率、尝试预算和任务分母；</li>
+      <li>pass@k 覆盖率是<strong>另一个</strong>指标，需要对应的重复尝试。</li>
+    </ul>
+
+    <p>这种克制在当下相当稀缺。大多数自我改进的发布，都乐于展示一条漂亮的上升曲线。</p>
+
+    <h2>八、边界：它自己承认的局限</h2>
+
+    <p>这一节比前面的机制更重要，因为它决定了你能不能用这套东西下结论。</p>
+
+    <div class="box">
+      <div class="h">⚠️ 五条边界</div>
+      <ul style="margin-bottom:0">
+        <li><strong>Test 不是独立测试集。</strong>任务 ID 是分开的，但材料组在 Train–Val 之间有 20 组重叠、Train–Test 之间有 18 组重叠。文档原话是：「这不是在声称 Test 材料独立或此前未见。」</li>
+        <li><strong>反馈是模拟的、有界的。</strong>实验用的是「验证器辅助的有界模拟反馈」，不是真人研究员。这和面向研究者的产品演示是两回事，不能混着讲。</li>
+        <li><strong>产品演示 ≠ RSI 实验。</strong>公开的 web 版是产品工作台，文档描述它有 224 个工具、22 个功能模块，当前工具和数据偏生物医学。而代码库里的 RSI 实验是独立的简化实现，用的是冻结任务集和顺序的 harness/RL 阶段——<strong>不包含</strong>方法图里的自适应任务环境和在线部署。</li>
+        <li><strong>完整产品源码没开源。</strong>代码库里只有简化 Agent 实现（实验 harness、执行 broker、验证器、SkyRL 适配器）。托管工作台前端、账号体系、产品 API 服务都不在里面。</li>
+        <li><strong>默认跑法是 debug 模式。</strong>默认触发器会在<strong>不管 harness 的 Test 分数有没有提升</strong>的情况下跑完固定阶段排期。也就是说，默认配置验证的是「流程能跑通」，而不是「每轮都变好了」。</li>
+      </ul>
+    </div>
+
+    <h2>九、怎么看这件事</h2>
+
+    <p>如果把 Agent 的进化拆成「改流程」和「改权重」两件事，ScienceBuddy 的贡献并不在于发明了其中任何一件——流程搜索和 RL 训练都是成熟技术——而在于<strong>把两者咬合成一个闭环，并且把每一步的证据边界划清楚</strong>。</p>
+
+    <p>它读起来更像一份工程规范，而不是一份成绩单。文档里那些「必须完整覆盖」「平局保留父代」「检查点存在不算数」「训练准确率不是 Test 曲线」，枯燥，但恰好是这类系统能长期跑下去的地基。</p>
+
+    <p>对做 Agent 的人来说，可迁移的经验可以浓缩成三条：<strong>把流程变成可搜索的对象；让评分信息远离被评分者；对自己的测量保持克制。</strong></p>
+
+    <p>至于这套东西到底能让 Agent 变强多少——它自己没给结论，还明确说了当前配置的测量结果必须以实际记录为准，不能拿早期的案例图代替。这种诚实，反而比一条漂亮曲线更让人愿意往下看。</p>
+
+    <h2>附：术语速查</h2>
+
+    <table>
+      <thead>
+        <tr><th>术语</th><th>含义</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>harness</td><td>引导 Agent 干活的 Python 程序，组织提示、调用模型、执行工具、提交答案</td></tr>
+        <tr><td>内递归</td><td>固定模型，搜索更好的 harness</td></tr>
+        <tr><td>外递归</td><td>固定 harness，用 RL 更新模型</td></tr>
+        <tr><td>RSI</td><td>Recursive Self-Improvement，自我改进</td></tr>
+        <tr><td>Val / Test</td><td>验证集（用于选择）／测试集（用于阶段边界测量）</td></tr>
+        <tr><td>GRPO</td><td>一种组内相对优势的 RL 算法，比较同任务多次尝试的奖励</td></tr>
+        <tr><td>PRM</td><td>过程奖励模型，这里用于把反馈关联到公开执行记录</td></tr>
+        <tr><td>preflight</td><td>候选程序在正式评估前的执行与格式合法性检查</td></tr>
+        <tr><td>on-policy</td><td>用当前模型自己产出的轨迹做训练</td></tr>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="article-foot anim-fade">
+    📌 本文由 AIBUILD.WORK <b>整理</b>：按「机制 → 证据设计 → 实验配方 → 边界」重组项目公开文档，并补充对从业者的可迁移结论。<br>
+    🎨 配图为本站<b>原创设计</b>（程序化绘制），未使用项目方任何素材或版式。<br>
+    ⚠️ 文中所有数字均来自项目公开文档的<b>配置说明</b>，属于配方而非实测性能；引用时请注意区分。<br>
+    📚 更多内容：<a href="../ai-curriculum.html" style="color:var(--accent2)">AI 技能升级课程体系</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>创新资讯 · 公益免费、开源共享</p>
+    <p style="margin-top:6px;opacity:0.6">
+      开源仓库：<a href="https://github.com/keyneszeng/aibuild.work" target="_blank">github.com/keyneszeng/aibuild.work</a>
+      · 更新于 2026-09-24
+    </p>
+  </div>
+</footer>
+
+<script src="../script.js"></script>
+</body>
+</html>
