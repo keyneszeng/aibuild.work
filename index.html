@@ -134,6 +134,9 @@
       color: var(--muted);
       font-size: 12px;
     }
+    .home-links{display:flex;align-items:center;gap:18px}
+    .home-links a{font-size:12px;font-weight:700;color:var(--mint);text-decoration:none}
+    .home-links a:hover{text-decoration:underline}
 
     main {
       min-height: 0;
@@ -422,7 +425,7 @@
   <div class="shell">
     <header>
       <a class="brand" href="/" aria-label="aibuild.work 首页"><span class="brand-dot"></span>AIBUILD.WORK</a>
-      <span class="identity">AI 创新应用的推浪者</span>
+      <div class="home-links"><a href="products.html">原创产品</a><span class="identity">AI 创新应用的推浪者</span></div>
     </header>
 
     <main>
@@ -441,7 +444,7 @@
 
       <section class="latest" aria-labelledby="latest-title">
         <div class="latest-head">
-          <div class="latest-title"><h2 id="latest-title">最新内容</h2><span id="result-count">6 篇</span></div>
+          <div class="latest-title"><h2 id="latest-title">最新内容</h2><span id="result-count">8 篇</span></div>
           <div class="slider-actions" aria-label="内容滚动控制">
             <button class="slider-btn" id="slide-prev" type="button" aria-label="上一组内容">←</button>
             <button class="slider-btn" id="slide-next" type="button" aria-label="下一组内容">→</button>
@@ -449,6 +452,20 @@
         </div>
 
         <div class="content-track" id="content-track" tabindex="0" aria-label="最新内容列表">
+          <a class="content-card" href="posts/association-meeting-erp.html" data-date="2026-11-03" data-search="原创产品 erp 协会 会议 会务执行 项目立项 审批 预算 赞助 收入 合同 发票 核销 归档">
+            <div class="content-meta"><span class="tag">原创产品 · ERP</span><time datetime="2026-11-03">11.03</time></div>
+            <h3>会规化会务执行系统：把会议从立项带到归档</h3>
+            <p>面向协会的会议管理：立项审批、会务执行、企业赞助与收入、合同、核销、数字归档。</p>
+            <span class="read-more">了解产品 →</span>
+          </a>
+
+          <a class="content-card" href="posts/rnbatch-web-app.html" data-date="2026-11-03" data-search="原创产品 rnbatch 文件 整理 批量重命名 Web App OCR 预览 撤销 下载 MCP">
+            <div class="content-meta"><span class="tag">原创产品 · Web App</span><time datetime="2026-11-03">11.03</time></div>
+            <h3>rnbatch：从乱命名到整齐项目档案</h3>
+            <p>从文件正文提取命名线索，先预览、再确认，批量重命名与撤销更有把握。</p>
+            <span class="read-more">了解产品 →</span>
+          </a>
+
           <a class="content-card" href="posts/deepseek-harness-kazix.html" data-date="2026-08-14" data-search="deepseek harness agent 插件 智能体 产品 创新">
             <div class="content-meta"><span class="tag">Agent</span><time datetime="2026-08-14">08.14</time></div>
             <h3>DeepSeek Harness：一切皆插件的 Agent 新思路</h3>
@@ -498,7 +515,7 @@
 
     <footer>
       <strong>让好用的 AI 方法，抵达真正需要的人。</strong>
-      <nav aria-label="页脚链接"><a href="news.html">全部内容</a><a href="https://github.com/keyneszeng/aibuild.work" target="_blank" rel="noopener">GitHub</a></nav>
+      <nav aria-label="页脚链接"><a href="products.html">原创产品</a><a href="news.html">全部内容</a><a href="https://github.com/keyneszeng/aibuild.work" target="_blank" rel="noopener">GitHub</a></nav>
     </footer>
   </div>
 
