@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rnbatch：从杂乱文件夹到整齐项目档案，只差一次确认 · AIBUILD.WORK</title>
+<meta name="description" content="AIBUILD.WORK 原创产品 rnbatch：读取文档正文提取候选关键词，批量重命名文件，支持预览、冲突检查、撤销、浏览器上传与 ZIP 下载，兼容 CLI 与 MCP。">
+<link rel="canonical" href="https://aibuild.work/posts/rnbatch-web-app.html">
+<meta property="og:type" content="article"><meta property="og:title" content="rnbatch：从杂乱文件夹到整齐项目档案，只差一次确认"><meta property="og:description" content="AIBUILD.WORK 原创产品 rnbatch：读取文档正文提取候选关键词，批量重命名文件，支持预览、冲突检查、撤销、浏览器上传与 ZIP 下载，兼容 CLI 与 MCP。">
+<meta property="og:url" content="https://aibuild.work/posts/rnbatch-web-app.html">
+<style>
+  :root{--ink:#182b30;--muted:#5f7273;--mint:#078f82;--blue:#356da1;--red:#b64635;--line:rgba(28,61,61,.14);--paper:#f7f5ee}
+  *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);background:radial-gradient(circle at 85% 5%,rgba(7,143,130,.09),transparent 32%),radial-gradient(circle at 3% 33%,rgba(53,109,161,.09),transparent 30%),var(--paper);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Yahei",sans-serif;line-height:1.8}
+  a{color:inherit;text-underline-offset:4px}
+  .site-nav{position:sticky;top:0;z-index:10;background:rgba(247,245,238,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:1120px;margin:auto;min-height:64px;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .wordmark{font-size:14px;font-weight:800;letter-spacing:.1em;text-decoration:none;white-space:nowrap}.wordmark::before{content:"";display:inline-block;vertical-align:middle;width:8px;height:8px;background:var(--red);margin-right:10px;border-radius:2px}
+  .nav-links{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.nav-links a{text-decoration:none}.nav-links a:hover{color:var(--mint)}
+  .story{max-width:960px;margin:0 auto;padding:0 24px 75px}
+  .story-hero{padding:64px 0 38px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:12px;letter-spacing:.12em;color:var(--mint);font-weight:800}
+  h1,h2,h3{font-family:"Songti SC","STSong","Noto Serif SC",serif;color:var(--ink)}
+  h1{max-width:900px;font-size:clamp(34px,5.6vw,62px);line-height:1.17;letter-spacing:-.03em;margin:18px 0}
+  .deck{max-width:760px;font-size:clamp(16px,2vw,20px);color:var(--muted);line-height:1.85;margin:0}
+  .meta{font-size:12px;color:var(--muted);margin-top:23px}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .cta{display:inline-flex;align-items:center;justify-content:center;padding:11px 19px;border-radius:10px;background:var(--ink);color:#fff!important;text-decoration:none;font-size:14px;font-weight:700;border:1px solid var(--ink)}
+  .cta.secondary{background:transparent;color:var(--ink)!important;border-color:var(--line)}
+  .story-body{max-width:800px;padding:32px 0 0}
+  .story-body h2{font-size:clamp(23px,3.5vw,30px);line-height:1.35;margin:51px 0 14px}
+  .story-body h3{font-size:20px;margin:28px 0 12px}
+  .story-body p{font-size:16px;line-height:2.05;margin:16px 0;color:#34474b}
+  .story-body ul,.story-body ol{padding-left:25px;color:#34474b}
+  .story-body li{font-size:16px;line-height:1.95;margin:9px 0}
+  .story-body strong{color:var(--ink)}
+  .pullquote{font-size:clamp(20px,3vw,26px);font-family:"Songti SC",serif;border-left:4px solid var(--red);margin:36px 0;padding:13px 24px;background:rgba(255,255,255,.56);line-height:1.65}
+  .feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:24px 0}
+  .feature{border:1px solid var(--line);background:rgba(255,255,255,.76);border-radius:14px;padding:19px}
+  .feature b{display:block;font-size:15px;margin-bottom:7px}.feature span{font-size:13px;color:var(--muted);line-height:1.75}
+  .scenario{border-radius:14px;padding:22px;background:rgba(7,143,130,.06);border:1px solid rgba(7,143,130,.18);margin:25px 0}
+  .scenario h3{margin-top:0}.scenario p:last-child{margin-bottom:0}
+  .status{border-left:3px solid var(--blue);padding:12px 20px;background:rgba(53,109,161,.07);margin-top:35px;color:var(--muted);font-size:14px;line-height:1.85}
+  .story-footer{border-top:1px solid var(--line);margin-top:55px;padding-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;color:var(--muted);font-size:13px}
+  .story-footer a{color:var(--mint)}
+  @media(max-width:620px){.nav-inner{padding:12px 16px}.nav-links{gap:10px;font-size:12px}.story{padding:0 18px 50px}.story-hero{padding:39px 0 29px}.feature-grid{grid-template-columns:1fr}.story-body p,.story-body li{font-size:15px}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="主导航"><div class="nav-inner">
+<a class="wordmark" href="../">AIBUILD.WORK</a>
+<div class="nav-links"><a href="../">首页</a><a href="../products.html">我们的产品</a><a href="../news.html">全部文章</a></div>
+</div></nav>
+<main class="story">
+<header class="story-hero">
+<div class="eyebrow">原创产品 / rnbatch / 文件整理 Web App</div>
+<h1>rnbatch：从杂乱文件夹到整齐项目档案，只差一次确认</h1>
+<p class="deck">让命名真正基于文件内容，让批量操作先有预览、再有确认，最后还能反悔。一个为真实文件整理场景设计的轻量工具。</p>
+<div class="meta">AIBUILD.WORK · 产品实践 · 2026 年 11 月 3 日</div>
+<div class="actions"><a class="cta" href="https://rnbatch.aibuild.work/" target="_blank" rel="noopener noreferrer">访问产品演示 ↗</a><a class="cta secondary" href="../products.html">返回产品展示</a></div>
+</header>
+<article class="story-body">
+<p>一个项目刚开始时，文件夹通常还算整齐。几周以后，里面可能已经堆满 <strong>IMG_0421.JPG、微信图片_20261018.jpg、最终版_v3_真最终.pptx</strong>，再夹杂合同、会议纪要、PDF 和 Excel。文件内容很重要，但名字几乎没有告诉你“它属于哪个项目”。</p>
+<p><strong>rnbatch</strong> 想解决的不是简单的批量替换字符，而是更靠前的一步：<strong>从已有文件里找到可用的命名线索，再安全地整理整批文件。</strong></p>
+<div class="pullquote">不是让用户一个个修改文件名，而是把“理解内容 → 命名 → 检查 → 执行”变成一条清晰流程。</div>
+<h2>一、先读内容，再决定叫什么</h2>
+<p>传统批量重命名工具擅长加前缀、替换字符串、连续编号，但前提是你已经知道正确的前缀。rnbatch 将<strong>正文提取</strong>放进命名流程：读取 Word、PPT、Excel、PDF 等文档中的文本，在可用环境下还可借助 OCR 理解图片里的文字。</p>
+<p>系统根据内容生成<strong>候选关键词及其依据</strong>，由人或 AI 来判断哪一个真正代表项目。它不会声称仅凭算法就一定理解文件含义，而是把做判断需要的信息准备好。</p>
+<h2>二、浏览器里完成整批整理</h2>
+<p>rnbatch 目前优先发展的形态是 <strong>Web App</strong>。在浏览器工作流中，用户可选择文件或文件夹，上传到临时工作区，从候选词中选定命名规则，预览结果，确认后执行，并把整理后的文件打包为 ZIP 下载。</p>
+<div class="feature-grid">
+<div class="feature"><b>上传与临时工作区</b><span>围绕上传副本组织处理，避免直接改动用户在浏览器里选中的原文件。</span></div>
+<div class="feature"><b>文档正文提取</b><span>从多种办公文档中寻找项目名、机构名等关键词线索，减少人工逐份打开的时间。</span></div>
+<div class="feature"><b>命名模板</b><span>支持关键词、序号、文件类型、原名、日期等变量组合，统一整批文件命名格式。</span></div>
+<div class="feature"><b>预览、冲突检查与撤销</b><span>改动前先看完整映射；对重名、占用和异常情况进行拦截，并保留可撤销的操作路径。</span></div>
+</div>
+<h2>三、安全感，来自“先预览、再执行”</h2>
+<p>批量改名最让人不安的不是速度慢，而是“点一下就把重要文件改乱了”。因此，rnbatch 把预览做成独立步骤：<strong>先列出旧文件名与目标文件名的对应关系，检查冲突，确认无误后才执行。</strong></p>
+<p>在核心引擎中，重命名采用避免相互覆盖的处理方式，执行记录可用于撤销。对不应处理的隐藏文件、符号链接、名称过长等情况也有专门的边界处理。</p>
+<div class="scenario"><h3>举个例子</h3><p>从一份会议纪要识别出「星海中心」 → 选用模板「项目名 + 两位序号 + 文件类型」 → 预览得到「星海中心-01-文档.docx」「星海中心-02-演示.pptx」「星海中心-03-照片.jpg」 → 确认后执行，并下载整理后的文件包。</p></div>
+<h2>四、不止网页，它也能成为自动化工作流的一部分</h2>
+<p>除了浏览器入口，rnbatch 还提供<strong>命令行接口（CLI）</strong>，适合脚本化处理；通过 <strong>MCP</strong> 接口，Agent 可以调用列目录、提取文本、预览改名、执行、撤销与查询历史等能力。</p>
+<p>在这种分工里，AI 负责理解「哪些词值得用」，而重命名引擎负责「按规则准确、可检查地执行」。对整理项目资料、活动图片、设计交付文件或行政档案的人来说，这种分工更务实。</p>
+<h2>五、一个小工具，也可以认真对待每个细节</h2>
+<p>我们希望 rnbatch 是那种你第一次使用就觉得轻松、以后再遇到杂乱文件夹会自然想起的工具。它的价值不在“批量”两个字，而在于让文件管理少一些机械操作、多一些确定性。</p>
+<p>当前 Web App 仍处于持续研发和演示验证阶段。对于上传大小、多用户隔离、长期任务持久化、不同系统 OCR 能力等，实际体验应以对应版本为准。我们会继续围绕<strong>浏览器可用性、稳定性与安全边界</strong>打磨它。</p>
+
+<aside class="status" role="note"><strong>当前阶段说明：</strong>rnbatch 的主要产品方向是浏览器 Web App，目前仍在演示和安全验证阶段，并非已经完成公网多用户安全审计的成熟 SaaS。文档解析、OCR、文件数量和大小等能力随运行环境及版本而异；重要文件建议先使用副本测试，并以 <a href='https://rnbatch.aibuild.work/' target='_blank' rel='noopener noreferrer'>当前演示版</a> 实际功能为准。</aside>
+<div class="actions"><a class="cta" href="https://rnbatch.aibuild.work/" target="_blank" rel="noopener noreferrer">体验 rnbatch ↗</a><a class="cta secondary" href="https://github.com/keyneszeng/rnbatch" target="_blank" rel="noopener noreferrer">查看 GitHub 项目</a></div>
+</article>
+<footer class="story-footer"><span>© 2026 AIBUILD.WORK · 从真实问题出发，持续打磨产品</span><a href="../products.html">探索更多产品 →</a></footer>
+</main></body></html>
