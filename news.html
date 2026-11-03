@@ -183,6 +183,7 @@
     <div class="navbar-links">
       <a href="/">首页</a>
       <a href="/news.html" class="nav-keep">最新内容</a>
+      <a href="/products.html">原创产品</a>
       <a href="/ai-curriculum.html">课程</a>
     </div>
   </div>
@@ -193,13 +194,14 @@
   <header class="hero-news anim-fade-up">
     <div class="badge"><span class="dot"></span> 创新资讯 · 精选 AI 文章</div>
     <h1>读懂 <span class="grad">AI</span> 正在发生的事</h1>
-    <p class="sub">这里汇集我们持续筛选的 AI 行业文章——模型动态、Agent 进展、企业落地报告。<br>
-    点击任意卡片即可跳转原文，全部为外部公开来源。</p>
+    <p class="sub">这里既记录我们亲手开发的产品，也汇集持续筛选的 AI 行业文章——从产品落地、Agent 进展到技术观察。<br>
+    原创产品有详细功能介绍和体验入口，精选文章保留原文链接。</p>
   </header>
 
   <!-- 筛选 -->
   <div class="filters anim-fade" id="filters">
     <button class="on" data-cat="all">全部</button>
+    <button data-cat="product">原创产品</button>
     <button data-cat="model">模型动态</button>
     <button data-cat="agent">Agent</button>
     <button data-cat="report">行业报告</button>
@@ -208,6 +210,23 @@
 
   <!-- 文章列表 -->
   <div class="news-list anim-stagger auto-sort" id="news-list">
+
+    <article class="post-item card tilt-card" data-cat="product" data-date="2026-11-03">
+      <span class="tag">原创产品 · ERP</span>
+      <h3>会规化会务执行系统：把协会会议从立项到归档，串成一条线</h3>
+      <div class="meta">AIBUILD.WORK · 2026-11-03 · 演示版</div>
+      <p class="ex">我们开发的协会会议执行 ERP：围绕立项审批、会务筹备、企业赞助及会议收入、合同发票、核销结算和数字归档，建立可追踪的项目流程。</p>
+      <div class="read"><a href="posts/association-meeting-erp.html">阅读原创产品介绍 →</a> · <a href="https://erp.aibuild.work/" target="_blank" rel="noopener noreferrer">体验演示 ↗</a></div>
+    </article>
+
+    <article class="post-item card tilt-card" data-cat="product" data-date="2026-11-03">
+      <span class="tag">原创产品 · Web App</span>
+      <h3>rnbatch：从杂乱文件夹到整齐项目档案，只差一次确认</h3>
+      <div class="meta">AIBUILD.WORK · 2026-11-03 · 研发演示</div>
+      <p class="ex">提取文档中的命名线索，按模板预览整批文件名，确认执行后下载整理结果。Web App 优先，兼顾命令行和 MCP 自动化。</p>
+      <div class="read"><a href="posts/rnbatch-web-app.html">阅读原创产品介绍 →</a> · <a href="https://rnbatch.aibuild.work/" target="_blank" rel="noopener noreferrer">体验演示 ↗</a></div>
+    </article>
+
 
     <article class="post-item card tilt-card" data-cat="model" data-date="2026-07-01">
       <span class="tag">模型动态</span>
@@ -305,7 +324,7 @@
 
   <!-- 提示 -->
   <p class="note-box anim-fade">
-    📌 本专栏为<b>人工精选的公开文章索引</b>，不定期更新。如果你有值得收录的好文章，欢迎通过主页微信 <b>openclaw520</b> 推荐给我。
+    📌 本专栏包含<b>AIBUILD.WORK 原创产品介绍与精选公开文章索引</b>，不定期更新。如果你有值得收录的好文章，欢迎通过主页微信 <b>openclaw520</b> 推荐给我。
   </p>
 </div>
 

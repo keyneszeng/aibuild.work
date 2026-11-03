@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>会规化会务执行系统：把协会会议从立项到归档，串成一条线 · AIBUILD.WORK</title>
+<meta name="description" content="AIBUILD.WORK 原创产品：协会会议执行 ERP，覆盖立项审批、会务筹备、赞助收入与合同、费用核销、结算、材料归档和审计留痕。">
+<link rel="canonical" href="https://aibuild.work/posts/association-meeting-erp.html">
+<meta property="og:type" content="article"><meta property="og:title" content="会规化会务执行系统：把协会会议从立项到归档，串成一条线"><meta property="og:description" content="AIBUILD.WORK 原创产品：协会会议执行 ERP，覆盖立项审批、会务筹备、赞助收入与合同、费用核销、结算、材料归档和审计留痕。">
+<meta property="og:url" content="https://aibuild.work/posts/association-meeting-erp.html">
+<style>
+  :root{--ink:#182b30;--muted:#5f7273;--mint:#078f82;--blue:#356da1;--red:#b64635;--line:rgba(28,61,61,.14);--paper:#f7f5ee}
+  *,*::before,*::after{box-sizing:border-box}html{scroll-behavior:smooth}
+  body{margin:0;color:var(--ink);background:radial-gradient(circle at 85% 5%,rgba(7,143,130,.09),transparent 32%),radial-gradient(circle at 3% 33%,rgba(53,109,161,.09),transparent 30%),var(--paper);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft Yahei",sans-serif;line-height:1.8}
+  a{color:inherit;text-underline-offset:4px}
+  .site-nav{position:sticky;top:0;z-index:10;background:rgba(247,245,238,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:1120px;margin:auto;min-height:64px;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+  .wordmark{font-size:14px;font-weight:800;letter-spacing:.1em;text-decoration:none;white-space:nowrap}.wordmark::before{content:"";display:inline-block;vertical-align:middle;width:8px;height:8px;background:var(--red);margin-right:10px;border-radius:2px}
+  .nav-links{display:flex;align-items:center;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}.nav-links a{text-decoration:none}.nav-links a:hover{color:var(--mint)}
+  .story{max-width:960px;margin:0 auto;padding:0 24px 75px}
+  .story-hero{padding:64px 0 38px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-size:12px;letter-spacing:.12em;color:var(--mint);font-weight:800}
+  h1,h2,h3{font-family:"Songti SC","STSong","Noto Serif SC",serif;color:var(--ink)}
+  h1{max-width:900px;font-size:clamp(34px,5.6vw,62px);line-height:1.17;letter-spacing:-.03em;margin:18px 0}
+  .deck{max-width:760px;font-size:clamp(16px,2vw,20px);color:var(--muted);line-height:1.85;margin:0}
+  .meta{font-size:12px;color:var(--muted);margin-top:23px}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .cta{display:inline-flex;align-items:center;justify-content:center;padding:11px 19px;border-radius:10px;background:var(--ink);color:#fff!important;text-decoration:none;font-size:14px;font-weight:700;border:1px solid var(--ink)}
+  .cta.secondary{background:transparent;color:var(--ink)!important;border-color:var(--line)}
+  .story-body{max-width:800px;padding:32px 0 0}
+  .story-body h2{font-size:clamp(23px,3.5vw,30px);line-height:1.35;margin:51px 0 14px}
+  .story-body h3{font-size:20px;margin:28px 0 12px}
+  .story-body p{font-size:16px;line-height:2.05;margin:16px 0;color:#34474b}
+  .story-body ul,.story-body ol{padding-left:25px;color:#34474b}
+  .story-body li{font-size:16px;line-height:1.95;margin:9px 0}
+  .story-body strong{color:var(--ink)}
+  .pullquote{font-size:clamp(20px,3vw,26px);font-family:"Songti SC",serif;border-left:4px solid var(--red);margin:36px 0;padding:13px 24px;background:rgba(255,255,255,.56);line-height:1.65}
+  .feature-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin:24px 0}
+  .feature{border:1px solid var(--line);background:rgba(255,255,255,.76);border-radius:14px;padding:19px}
+  .feature b{display:block;font-size:15px;margin-bottom:7px}.feature span{font-size:13px;color:var(--muted);line-height:1.75}
+  .scenario{border-radius:14px;padding:22px;background:rgba(7,143,130,.06);border:1px solid rgba(7,143,130,.18);margin:25px 0}
+  .scenario h3{margin-top:0}.scenario p:last-child{margin-bottom:0}
+  .status{border-left:3px solid var(--blue);padding:12px 20px;background:rgba(53,109,161,.07);margin-top:35px;color:var(--muted);font-size:14px;line-height:1.85}
+  .story-footer{border-top:1px solid var(--line);margin-top:55px;padding-top:20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;color:var(--muted);font-size:13px}
+  .story-footer a{color:var(--mint)}
+  @media(max-width:620px){.nav-inner{padding:12px 16px}.nav-links{gap:10px;font-size:12px}.story{padding:0 18px 50px}.story-hero{padding:39px 0 29px}.feature-grid{grid-template-columns:1fr}.story-body p,.story-body li{font-size:15px}}
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="主导航"><div class="nav-inner">
+<a class="wordmark" href="../">AIBUILD.WORK</a>
+<div class="nav-links"><a href="../">首页</a><a href="../products.html">我们的产品</a><a href="../news.html">全部文章</a></div>
+</div></nav>
+<main class="story">
+<header class="story-hero">
+<div class="eyebrow">原创产品 / 协会会议执行 ERP / 业务流程</div>
+<h1>会规化会务执行系统：把协会会议从立项到归档，串成一条线</h1>
+<p class="deck">让会议不再是一堆散落的表格与聊天记录，而是一个有负责人、有流程、有财务闭环、有数字档案的可管理项目。</p>
+<div class="meta">AIBUILD.WORK · 产品实践 · 2026 年 11 月 3 日</div>
+<div class="actions"><a class="cta" href="https://erp.aibuild.work/" target="_blank" rel="noopener noreferrer">访问产品演示 ↗</a><a class="cta secondary" href="../products.html">返回产品展示</a></div>
+</header>
+<article class="story-body">
+<p>一场协会会议，表面上是确定时间、地点、嘉宾和议程；背后却常常牵涉立项审批、任务分派、会务需求、企业赞助、合同发票、材料收集、费用核销与最终归档。信息一旦散落在聊天记录、表格和网盘里，项目负责人很难回答一个简单的问题：<strong>「这场会议现在究竟推进到哪里了？」</strong></p>
+<p>这正是我们开发<strong>会规化会务执行系统（协会会议执行 ERP）</strong>的起点：不再让每个岗位维护一份自己的“最新版本”，而是让整个会议从申请到归档，有一条明确的业务主线。</p>
+<div class="pullquote">把一场会议变成可协作、可追踪、可核对、可归档的完整项目。</div>
+<h2>一、从立项开始，工作就有了统一入口</h2>
+<p>会议不是批准以后才开始管理。系统把<strong>立项申请、审批、项目建档、执行筹备</strong>串联起来：项目负责人提交基本信息和业务需求，具备权限的人员审核，立项通过后形成可持续推进的会议项目。</p>
+<p>项目管理并非一张静态信息表。它围绕会议生命周期组织：<strong>草稿 → 待审批 → 已立项 → 筹备中 → 执行中 → 待核销 → 已核销 → 已结算 → 已归档</strong>。每一次状态变化都对应真实的下一步工作。</p>
+<h2>二、岗位协作，不再靠反复催问</h2>
+<div class="feature-grid">
+<div class="feature"><b>角色与协会权限</b><span>针对管理员、协会成员、会务执行人员和财务人员划分可见数据与操作边界，支持围绕协会开展分工。</span></div>
+<div class="feature"><b>待办与审批中心</b><span>把待确认、待审批、待执行的事项汇总到工作入口，让交接和处理进度更清楚。</span></div>
+<div class="feature"><b>会务需求与执行</b><span>确认会议需求、组织筹备任务、推进执行状态，减少需求在不同沟通渠道之间遗漏。</span></div>
+<div class="feature"><b>嘉宾、议程与材料</b><span>围绕邀请确认、终版议程、会议资料和附件收集管理会务信息，形成统一项目上下文。</span></div>
+</div>
+<p>例如，一场专业学术会议通过立项之后，会务执行负责人可以在自己的待办里接续筹备，而不是从零开始问项目负责人“资料在哪里、哪些事情已经定了”。</p>
+<h2>三、会议收入与支出，要在同一个视角里看</h2>
+<p>协会会议通常涉及企业赞助。过去常见的问题是：赞助合同在业务人员手里，付款凭证在财务手里，发票进度在另一张表里，费用预算又在其他文件中。对项目而言，这些数据本应是同一笔业务。</p>
+<p>系统围绕<strong>会议收入、企业赞助、合同信息、收付款凭证与开票资料</strong>组织记录，并与会议预算、支出、核销和结算流程衔接。管理者可以从项目维度理解资金情况，而不是在多个文件之间来回核对。</p>
+<p>合同审批环节与业务档案关联；合同和相关附件进入归档流程时，也有机会复用此前整理过的业务资料，降低重复整理的成本。</p>
+<h2>四、从会前准备到会后归档，材料不再四处分散</h2>
+<p>会议执行期间产生的文件往往比想象中多：邀请函、会议通知、议程、课件、现场照片、合同、发票、付款证明、签到资料……系统将这些材料围绕项目组织，并对接核销、结算和数字卷宗。</p>
+<p>这不仅是把文件放到一个地方。更重要的是：<strong>每份材料属于哪场会议、服务于哪个环节、处于什么状态</strong>，都可以在业务上下文中理解；关键操作也有审计与留痕设计。</p>
+<div class="scenario"><h3>一次完整的会议流程，可以这样展开</h3><p>协会成员发起会议立项 → 审批通过 → 会务负责人接手筹备 → 确认嘉宾与议程 → 收集合同和会议材料 → 记录赞助收入与相关凭证 → 处理费用核销、结算 → 项目归档。</p></div>
+<h2>五、为什么我们要做这样一个产品？</h2>
+<p>因为很多组织缺少的不是“更多表格”，而是<strong>一套能让业务与责任持续衔接的工作机制</strong>。这套系统聚焦协会、学术会议及相关会务执行场景，不试图取代通用会计软件，而是把会议项目执行中的关键人、钱、事、物串起来。</p>
+<p>对协会负责人，它提供项目进度的统一视角；对执行团队，它让任务交接更明确；对财务和档案岗位，它让合同、凭证、核销与归档能够沿着同一项目追溯。</p>
+
+<aside class="status" role="note"><strong>当前阶段说明：</strong>目前 <a href='https://erp.aibuild.work/' target='_blank' rel='noopener noreferrer'>erp.aibuild.work</a> 是 Cloudflare 上的演示环境，用于界面展示与测试。真实生产服务计划使用独立的服务器、持久化数据和正式权限、安全与短信配置。本文介绍产品设计及代码覆盖的能力，不代表每项功能都已完成线上验收或正式商用上线。</aside>
+<div class="actions"><a class="cta" href="https://erp.aibuild.work/" target="_blank" rel="noopener noreferrer">体验 会议执行 ERP ↗</a><a class="cta secondary" href="https://github.com/keyneszeng/erp-workbanch" target="_blank" rel="noopener noreferrer">查看 GitHub 项目</a></div>
+</article>
+<footer class="story-footer"><span>© 2026 AIBUILD.WORK · 从真实问题出发，持续打磨产品</span><a href="../products.html">探索更多产品 →</a></footer>
+</main></body></html>
